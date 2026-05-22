@@ -4,7 +4,8 @@ version = "0.1.0"
 description = "A modern PySide6 UI framework for building elegant desktop tools."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 
 authors = [
     { name = "Siling" }
@@ -24,11 +25,12 @@ keywords = [
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: User Interfaces",
     "Topic :: Desktop Environment",
 ]
@@ -43,6 +45,8 @@ dev = [
     "black>=24.0.0",
     "mypy>=1.8.0",
     "pytest>=8.0.0",
+    "build>=1.2.0",
+    "twine>=5.0.0",
 ]
 
 docs = [
@@ -51,9 +55,9 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-name/kirei-ui"
-Repository = "https://github.com/your-name/kirei-ui"
-Issues = "https://github.com/your-name/kirei-ui/issues"
+Homepage = "https://github.com/ExMikuPro/KireiUI"
+Repository = "https://github.com/ExMikuPro/KireiUI"
+Issues = "https://github.com/ExMikuPro/KireiUI/issues"
 
 [build-system]
 requires = ["setuptools>=68.0.0", "wheel"]
@@ -119,3 +123,6 @@ quote-style = "double"
 indent-style = "space"
 line-ending = "auto"
 docstring-code-format = true
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
