@@ -1,65 +1,125 @@
+/*
+   KireiUI Base Theme
+   Visual reference: AUI / EUI style enterprise UI
+*/
+
+/* =========================
+   Design Tokens
+   ========================= */
+
+/* Neutrals */
+/* #FFFFFF #FAFBFC #F4F5F7 #EBECF0 #DFE1E6 #C1C7D0 #A5ADBA #6B778C #42526E #172B4D */
+
+/* Brand */
+/* #0052CC #0065FF #0747A6 */
+
+/* Semantic */
+/* Danger: #DE350B #FF5630 #BF2600 */
+/* Warning: #FFAB00 #FFC400 #FF991F */
+/* Success: #00875A #36B37E #006644 */
+
+QWidget {
+    color: #172B4D;
+    font-size: 14px;
+}
+
+/* =========================
+   Typography
+   ========================= */
+QLabel[kireiRole="title"] {
+    font-size: 24px;
+    font-weight: 600;
+    color: #172B4D;
+}
+
+QLabel[kireiRole="text"] {
+    font-size: 14px;
+    color: #42526E;
+}
+
+QLabel[kireiVariant="subtle"] {
+    color: #6B778C;
+}
+
+QLabel[kireiVariant="danger"] {
+    color: #DE350B;
+}
+
+QLabel[kireiVariant="warning"] {
+    color: #FF991F;
+}
+
+QLabel[kireiVariant="success"] {
+    color: #00875A;
+}
+
+/* =========================
+   Buttons
+   ========================= */
 QPushButton[kirei="button"] {
     min-height: 32px;
     padding: 0 10px;
-    border-radius: 3px;
-    border: 1px solid #c1c7d0;
-    background-color: #f4f5f7;
-    color: #172b4d;
+    border-radius: 4px;
+    border: 1px solid #C1C7D0;
+    background-color: #F4F5F7;
+    color: #172B4D;
     font-size: 14px;
     font-weight: 500;
 }
 
 QPushButton[kirei="button"]:hover {
-    background-color: #ebecf0;
-    border-color: #a5adba;
+    background-color: #EBECF0;
+    border-color: #A5ADBA;
 }
 
 QPushButton[kirei="button"]:pressed {
-    background-color: #dfe1e6;
-    border-color: #a5adba;
+    background-color: #DFE1E6;
+    border-color: #A5ADBA;
+}
+
+QPushButton[kirei="button"]:focus {
+    outline: none;
+    border-color: #4C9AFF;
 }
 
 QPushButton[kirei="button"]:disabled {
-    background-color: #f4f5f7;
-    border-color: #dfe1e6;
-    color: #a5adba;
+    background-color: #F4F5F7;
+    border-color: #DFE1E6;
+    color: #A5ADBA;
 }
 
-/* compact */
 QPushButton[kirei="button"][size="compact"] {
     min-height: 28px;
     padding: 0 8px;
     font-size: 13px;
 }
 
-/* primary */
 QPushButton[kirei="button"][variant="primary"] {
-    background-color: #0052cc;
-    border-color: #0052cc;
-    color: #ffffff;
+    background-color: #0052CC;
+    border-color: #0052CC;
+    color: #FFFFFF;
 }
 
 QPushButton[kirei="button"][variant="primary"]:hover {
-    background-color: #0065ff;
-    border-color: #0065ff;
+    background-color: #0065FF;
+    border-color: #0065FF;
 }
 
 QPushButton[kirei="button"][variant="primary"]:pressed {
-    background-color: #0747a6;
-    border-color: #0747a6;
+    background-color: #0747A6;
+    border-color: #0747A6;
 }
 
 QPushButton[kirei="button"][variant="primary"]:disabled {
-    background-color: #dfe1e6;
-    border-color: #dfe1e6;
-    color: #a5adba;
+    background-color: #DFE1E6;
+    border-color: #DFE1E6;
+    color: #A5ADBA;
 }
 
-/* link */
 QPushButton[kirei="button"][variant="link"] {
     background-color: transparent;
     border-color: transparent;
-    color: #0052cc;
+    color: #0052CC;
     padding-left: 4px;
     padding-right: 4px;
 }
@@ -67,62 +127,202 @@ QPushButton[kirei="button"][variant="link"] {
 QPushButton[kirei="button"][variant="link"]:hover {
     background-color: transparent;
     border-color: transparent;
-    color: #0065ff;
+    color: #0065FF;
     text-decoration: underline;
 }
 
 QPushButton[kirei="button"][variant="link"]:pressed {
-    color: #0747a6;
+    color: #0747A6;
 }
 
-/* subtle */
 QPushButton[kirei="button"][variant="subtle"] {
     background-color: transparent;
     border-color: transparent;
-    color: #42526e;
+    color: #42526E;
 }
 
 QPushButton[kirei="button"][variant="subtle"]:hover {
-    background-color: #ebecf0;
+    background-color: #EBECF0;
     border-color: transparent;
-    color: #172b4d;
+    color: #172B4D;
 }
 
 QPushButton[kirei="button"][variant="subtle"]:pressed {
-    background-color: #dfe1e6;
-    color: #172b4d;
+    background-color: #DFE1E6;
+    color: #172B4D;
 }
 
-/* danger */
 QPushButton[kirei="button"][variant="danger"] {
-    background-color: #de350b;
-    border-color: #de350b;
-    color: #ffffff;
+    background-color: #DE350B;
+    border-color: #DE350B;
+    color: #FFFFFF;
 }
 
 QPushButton[kirei="button"][variant="danger"]:hover {
-    background-color: #ff5630;
-    border-color: #ff5630;
+    background-color: #FF5630;
+    border-color: #FF5630;
 }
 
 QPushButton[kirei="button"][variant="danger"]:pressed {
-    background-color: #bf2600;
-    border-color: #bf2600;
+    background-color: #BF2600;
+    border-color: #BF2600;
 }
 
-/* warning */
 QPushButton[kirei="button"][variant="warning"] {
-    background-color: #ffab00;
-    border-color: #ffab00;
-    color: #172b4d;
+    background-color: #FFAB00;
+    border-color: #FFAB00;
+    color: #172B4D;
 }
 
 QPushButton[kirei="button"][variant="warning"]:hover {
-    background-color: #ffc400;
-    border-color: #ffc400;
+    background-color: #FFC400;
+    border-color: #FFC400;
 }
 
 QPushButton[kirei="button"][variant="warning"]:pressed {
-    background-color: #ff991f;
-    border-color: #ff991f;
+    background-color: #FF991F;
+    border-color: #FF991F;
+}
+
+QPushButton[kirei="button"][variant="success"] {
+    background-color: #00875A;
+    border-color: #00875A;
+    color: #FFFFFF;
+}
+
+QPushButton[kirei="button"][variant="success"]:hover {
+    background-color: #36B37E;
+    border-color: #36B37E;
+}
+
+QPushButton[kirei="button"][variant="success"]:pressed {
+    background-color: #006644;
+    border-color: #006644;
+}
+
+/* =========================
+   Inputs
+   ========================= */
+QLineEdit,
+QTextEdit,
+QComboBox {
+    border: 1px solid #C1C7D0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    color: #172B4D;
+    selection-background-color: #4C9AFF;
+}
+
+QLineEdit,
+QComboBox {
+    min-height: 36px;
+    padding: 6px 10px;
+}
+
+QTextEdit {
+    padding: 8px;
+}
+
+QLineEdit:hover,
+QTextEdit:hover,
+QComboBox:hover {
+    border-color: #A5ADBA;
+}
+
+QLineEdit:focus,
+QTextEdit:focus,
+QComboBox:focus {
+    border-color: #2684FF;
+    border-bottom-color: #0052CC;
+}
+
+QLineEdit:disabled,
+QTextEdit:disabled,
+QComboBox:disabled {
+    background-color: #FAFBFC;
+    color: #A5ADBA;
+    border-color: #DFE1E6;
+}
+
+QLineEdit[kireiRole="input"],
+QLineEdit[kireiRole="password"] {
+    min-height: 40px;
+    padding: 8px 12px;
+    background-color: #F4F5F7;
+    border: 1px solid #B3C0D1;
+    border-radius: 6px;
+    color: #172B4D;
+    font-size: 14px;
+    qproperty-placeholderTextColor: #6B7C97;
+}
+
+QLineEdit[kireiRole="input"]:focus,
+QLineEdit[kireiRole="password"]:focus {
+    background-color: #FFFFFF;
+    border: 1px solid #4C9AFF;
+    border-bottom-width: 2px;
+    border-bottom-color: #0052CC;
+}
+
+QLineEdit[kireiVariant="danger"],
+QTextEdit[kireiVariant="danger"],
+QComboBox[kireiVariant="danger"] {
+    border-color: #DE350B;
+}
+
+QLineEdit[kireiVariant="warning"],
+QTextEdit[kireiVariant="warning"],
+QComboBox[kireiVariant="warning"] {
+    border-color: #FF991F;
+}
+
+QLineEdit[kireiVariant="success"],
+QTextEdit[kireiVariant="success"],
+QComboBox[kireiVariant="success"] {
+    border-color: #00875A;
+}
+
+QComboBox {
+    min-width: 120px;
+    padding-right: 32px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 28px;
+    border: none;
+    border-left: 1px solid #C1C7D0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background: #F7F8FA;
+}
+
+QComboBox::down-arrow {
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+}
+
+QComboBox QAbstractItemView {
+    background: #FFFFFF;
+    border: 1px solid #C1C7D0;
+    outline: none;
+    selection-background-color: #DEEBFF;
+    selection-color: #172B4D;
+    padding: 4px;
+}
+
+/* =========================
+   Choice Controls
+   ========================= */
+QCheckBox,
+QRadioButton {
+    spacing: 8px;
+    color: #172B4D;
+}
+
+QCheckBox:disabled,
+QRadioButton:disabled {
+    color: #A5ADBA;
 }

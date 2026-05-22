@@ -1,11 +1,16 @@
-from PySide6.QtWidgets import QLabel, QLineEdit
-
 from kirei_ui import (
     KireiApp,
     KireiButton,
+    KireiCheckbox,
+    KireiComboBox,
     KireiForm,
-    KireiGrid,
     KireiHStack,
+    KireiInput,
+    KireiPassword,
+    KireiRadio,
+    KireiText,
+    KireiTextarea,
+    KireiTitle,
     KireiVStack,
     KireiWindow,
 )
@@ -14,52 +19,37 @@ from kirei_ui import (
 def main() -> int:
     app = KireiApp()
 
-    def on_primary_clicked() -> None:
-        print("Primary clicked")
-
-    def on_toggle_clicked(checked: bool) -> None:
-        print(f"Toggle checked: {checked}")
-
     root = (
         KireiVStack()
         .padding(32)
         .spacing(16)
-        .add(
-            KireiHStack()
-            .spacing(8)
-            .add(KireiButton("Default"))
-            .add(KireiButton("Primary").primary().on_click(on_primary_clicked))
-            .add(KireiButton("Link").link())
-            .add(KireiButton("Subtle").subtle())
-            .add(KireiButton("Danger").danger())
-            .add(KireiButton("Warning").warning())
-            .add(KireiButton("Toggle").checkable().on_click_checked(on_toggle_clicked))
-            .stretch()
-        )
-        .add(
-            KireiHStack()
-            .spacing(8)
-            .add(KireiButton("Compact").compact())
-            .add(KireiButton("Compact Primary").primary().compact())
-            .stretch()
-        )
-        .add(
-            KireiGrid()
-            .spacing(8)
-            .add_at(QLabel("Grid A"), 0, 0)
-            .add_at(QLabel("Grid B"), 0, 1)
-            .add_at(QLabel("Grid C"), 1, 0, 1, 2)
-        )
+        .add(KireiTitle("KireiUI Form Demo"))
+        .add(KireiText("This page demonstrates basic KireiUI controls."))
         .add(
             KireiForm()
-            .spacing(8)
-            .add_row("Name", QLineEdit())
-            .add_row("Email", QLineEdit())
+            .spacing(12)
+            .add_row("Username", KireiInput().placeholder("Enter username").clearable())
+            .add_row("Password", KireiPassword().placeholder("Enter password"))
+            .add_row("Bio", KireiTextarea().placeholder("Write something..."))
+            .add_row("Remember me", KireiCheckbox("Enabled").checked())
+            .add_row(
+                "Role",
+                KireiComboBox().add_items(["User", "Admin", "Guest"]).current("User"),
+            )
+            .add_row(
+                "Status",
+                KireiHStack().spacing(8).add(KireiRadio("Active").checked()).add(KireiRadio("Paused")),
+            )
         )
-        .stretch()
+        .add(
+            KireiHStack()
+            .stretch()
+            .add(KireiButton("Cancel").subtle())
+            .add(KireiButton("Submit").primary().on_click(lambda: print("submit")))
+        )
     )
 
-    window = KireiWindow().title("KireiUI AUI Button Test").size(900, 600).content(root)
+    window = KireiWindow().title("KireiUI Form Demo").size(900, 600).content(root)
     window.show()
 
     return app.run()

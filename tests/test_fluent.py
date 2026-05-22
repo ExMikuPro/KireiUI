@@ -14,6 +14,10 @@ from PySide6.QtWidgets import QApplication, QWidget
 from kirei_ui.app.application import KireiApp
 from kirei_ui.app.window import KireiWindow
 from kirei_ui.widgets.button import KireiButton
+from kirei_ui.widgets.choice import KireiCheckbox
+from kirei_ui.widgets.input import KireiInput, KireiPassword
+from kirei_ui.widgets.label import KireiLabel
+from kirei_ui.widgets.select import KireiComboBox
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -166,3 +170,43 @@ def test_app_set_theme_returns_self() -> None:
         app = KireiApp(argv=[], theme=None)
         assert app.set_theme(theme="base") is app
         assert app.theme("base") is app
+
+
+def test_label_text_returns_self() -> None:
+    label = KireiLabel()
+    assert label.text("A") is label
+
+
+def test_input_placeholder_returns_self() -> None:
+    control = KireiInput()
+    assert control.placeholder("A") is control
+
+
+def test_input_value_and_get_value() -> None:
+    control = KireiInput()
+    assert control.value("A").get_value() == "A"
+
+
+def test_password_default_echo_mode_is_password() -> None:
+    control = KireiPassword()
+    assert control.echoMode() == control.EchoMode.Password
+
+
+def test_checkbox_checked_and_is_checked() -> None:
+    control = KireiCheckbox()
+    assert control.checked().is_checked() is True
+
+
+def test_combobox_add_items_current_and_get_value() -> None:
+    control = KireiComboBox()
+    assert control.add_items(["A", "B"]).current("A").get_value() == "A"
+
+
+def test_input_on_change_returns_self() -> None:
+    control = KireiInput()
+    assert control.on_change(lambda _value: None) is control
+
+
+def test_button_on_click_returns_self_again() -> None:
+    button = KireiButton("A")
+    assert button.on_click(lambda: None) is button
