@@ -5,10 +5,17 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version (e.g. 0.2.3). If empty on tag trigger, use tag vX.Y.Z."
+        required: false
+        type: string
 
 jobs:
   build:
     uses: ./.github/workflows/build-all-architectures.yml
+    with:
+      version: ${{ github.event.inputs.version }}
 
   release:
     name: Create GitHub Release
