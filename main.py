@@ -1,36 +1,37 @@
-import sys
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel
 
-from PySide6.QtWidgets import QApplication, QLabel, QMainWindow
-
-
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-
-        self.setWindowTitle("KireiUI")
-        self.resize(900, 600)
-
-        label = QLabel("Hello KireiUI")
-        label.setStyleSheet("""
-            QLabel {
-                font-size: 28px;
-                font-weight: 600;
-                color: #1f2937;
-                qproperty-alignment: AlignCenter;
-            }
-        """)
-
-        self.setCentralWidget(label)
+from kirei_ui import KireiApp, KireiWindow
 
 
-def main():
-    app = QApplication(sys.argv)
+def main() -> int:
+    app = KireiApp(
+        application_name="KireiUI Demo",
+        organization_name="KireiUI",
+    )
 
-    window = MainWindow()
+    window = KireiWindow(
+        title="KireiUI Window Test",
+        width=900,
+        height=600,
+    )
+
+    label = QLabel("Hello KireiUI")
+    label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    label.setStyleSheet("""
+        QLabel {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1f2937;
+            background-color: #f7f8fa;
+        }
+    """)
+
+    window.set_content(label)
     window.show()
 
-    sys.exit(app.exec())
+    return app.run()
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
