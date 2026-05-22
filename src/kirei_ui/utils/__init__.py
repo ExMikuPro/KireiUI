@@ -8,12 +8,28 @@ T = TypeVar("T")
 
 
 def refresh_style(widget: Any) -> None:
+    """Re-polish ``widget``'s QSS after changing a Qt dynamic property.
+
+    QSS attribute selectors (e.g. ``[kireiVariant="primary"]``) only
+    re-evaluate when the style is unpolished and re-polished. Call
+    this after :meth:`QWidget.setProperty` to make the change visible.
+    """
     widget.style().unpolish(widget)
     widget.style().polish(widget)
     widget.update()
 
 
 def keep_callback(widget: Any, handler: T) -> T:
+    """Keep ``handler`` alive on ``widget`` and return it unchanged.
+
+    PySide6 will garbage-collect short-lived closures bound to Qt
+    signals once the local reference is gone. Storing them on the
+    widget itself (under ``_kirei_callbacks``) keeps them alive for
+    the widget's lifetime.
+
+    Returns the same handler so call sites can wrap inline:
+    ``signal.connect(keep_callback(self, handler))``.
+    """
     callbacks = attached_list(widget, "_kirei_callbacks")
     callbacks.append(handler)
     return handler

@@ -9,6 +9,15 @@ from typing import Any, ClassVar
 
 @dataclass(frozen=True)
 class IconEntry:
+    """One entry in the icon manifest.
+
+    Attributes:
+        name: Logical icon name (e.g. ``"save"``).
+        style: ``"regular"`` or ``"filled"``.
+        size: Native pixel size of the bundled SVG.
+        file: Path of the SVG relative to ``resources/icons/fluent/``.
+    """
+
     name: str
     style: str
     size: int
@@ -16,6 +25,13 @@ class IconEntry:
 
 
 class KireiIconRegistry:
+    """Bundled Fluent icon registry, loaded lazily from ``manifest.json``.
+
+    The registry caches the parsed manifest on the class itself, so the
+    JSON file is read once per process. Use :meth:`reload` after
+    swapping the bundled manifest at runtime (rarely needed).
+    """
+
     _loaded: ClassVar[bool] = False
     _entries: ClassVar[list[IconEntry]] = []
 
@@ -44,17 +60,20 @@ class KireiIconRegistry:
 
     @classmethod
     def reload(cls) -> None:
+        """Drop the cached manifest and reload it from disk on next access."""
         cls._loaded = False
         cls._entries = []
         cls._load()
 
     @classmethod
     def names(cls) -> list[str]:
+        """Return all known icon names, deduplicated and sorted."""
         cls._load()
         return sorted({entry.name for entry in cls._entries})
 
     @classmethod
     def exists(cls, name: str, style: str = "regular", size: int = 20) -> bool:
+        """Return True when an entry can be resolved for the requested combination."""
         return cls.resolve(name, style=style, size=size) is not None
 
     @classmethod
@@ -66,6 +85,19 @@ class KireiIconRegistry:
         *,
         strict: bool = False,
     ) -> str | None:
+        """Return a filesystem path to the resolved icon SVG.
+
+        Args:
+            name: Icon name to resolve.
+            style: Preferred style — ``"regular"`` or ``"filled"``.
+            size: Preferred pixel size; the closest available size is chosen.
+            strict: When True, raise :class:`KeyError` if no entry matches.
+                Default returns ``None``.
+
+        Returns:
+            Filesystem path as a string, or ``None`` when the icon is missing
+            (only when ``strict`` is False).
+        """
         entry = cls.resolve(name, style=style, size=size)
         if entry is None:
             if strict:
@@ -78,6 +110,14 @@ class KireiIconRegistry:
 
     @classmethod
     def resolve(cls, name: str, style: str = "regular", size: int = 20) -> IconEntry | None:
+        """Resolve ``(name, style, size)`` to the best-matching :class:`IconEntry`.
+
+        Matching prefers exact ``style`` first, then the alternate
+        style, then any style. Within each candidate style, an exact
+        size match is preferred; otherwise the size with the smallest
+        absolute delta wins. Returns ``None`` when no entry matches the
+        name at all.
+        """
         cls._load()
 
         normalized_name = name.strip().lower()

@@ -13,6 +13,11 @@ BUILTIN_THEMES: dict[str, str] = {
 
 
 def load_builtin_qss(theme: str = "base") -> str:
+    """Read a built-in theme's QSS by short name.
+
+    Raises :class:`ValueError` if ``theme`` is not in
+    :data:`BUILTIN_THEMES`.
+    """
     try:
         theme_file = BUILTIN_THEMES[theme]
     except KeyError as exc:
@@ -22,6 +27,12 @@ def load_builtin_qss(theme: str = "base") -> str:
 
 
 def load_qss_file(path: str | Path) -> str:
+    """Read a single QSS file and return its contents.
+
+    ``~`` is expanded. Raises :class:`IsADirectoryError` if ``path``
+    points to a directory; raises :class:`FileNotFoundError` if the
+    file does not exist.
+    """
     qss_path = Path(path).expanduser()
     if qss_path.is_dir():
         raise IsADirectoryError(qss_path)
@@ -29,6 +40,16 @@ def load_qss_file(path: str | Path) -> str:
 
 
 def load_qss_dir(path: str | Path, recursive: bool = False) -> list[Path]:
+    """Return a sorted list of ``*.qss`` files in ``path``.
+
+    Args:
+        path: Directory to scan.
+        recursive: When True, descend into subdirectories.
+
+    Raises:
+        FileNotFoundError: ``path`` does not exist.
+        NotADirectoryError: ``path`` is not a directory.
+    """
     dir_path = Path(path).expanduser()
     if not dir_path.exists():
         raise FileNotFoundError(dir_path)
@@ -46,6 +67,20 @@ def build_qss(
     recursive: bool = False,
     extra_qss: str | None = None,
 ) -> str:
+    """Compose a final stylesheet from a built-in theme plus user QSS.
+
+    Sources are concatenated in this order, separated by blank lines:
+
+    1. The built-in ``theme`` (when not ``None``).
+    2. Every ``*.qss`` file inside each entry of ``qss_dirs`` (sorted,
+       recursive when requested).
+    3. Each file in ``qss_files``, in the given order.
+    4. The ``extra_qss`` string, if provided.
+
+    Empty / whitespace-only sources are skipped. Later sources can
+    override earlier ones because Qt resolves QSS selectors with
+    later rules taking precedence.
+    """
     chunks: list[str] = []
 
     if theme is not None:
@@ -72,14 +107,23 @@ def build_qss(
 
 @dataclass
 class KireiTokens:
+    """Container for design-token style key/value pairs.
+
+    Currently a thin wrapper around a ``dict``. Reserved for future
+    token-based theming work; widgets do not consume it directly today.
+    """
+
     values: dict[str, Any] = field(default_factory=dict)
 
     def get(self, key: str, default: Any = None) -> Any:
+        """Return ``values[key]`` or ``default`` when missing."""
         return self.values.get(key, default)
 
 
 @dataclass
 class KireiStyle:
+    """Pre-built QSS string with a constructor for the standard sources."""
+
     qss: str = ""
 
     @classmethod
@@ -91,6 +135,7 @@ class KireiStyle:
         recursive: bool = False,
         extra_qss: str | None = None,
     ) -> KireiStyle:
+        """Build a :class:`KireiStyle` by delegating to :func:`build_qss`."""
         return cls(
             build_qss(
                 theme=theme,
@@ -103,6 +148,12 @@ class KireiStyle:
 
 
 class KireiTheme:
+    """Static helper namespace for stylesheet composition.
+
+    Today it only re-exports :func:`build_qss` under :meth:`build`.
+    Reserved for future theme-management helpers.
+    """
+
     @staticmethod
     def build(
         theme: str | None = "base",
@@ -111,6 +162,7 @@ class KireiTheme:
         recursive: bool = False,
         extra_qss: str | None = None,
     ) -> str:
+        """Static alias for :func:`build_qss`."""
         return build_qss(
             theme=theme,
             qss_dirs=qss_dirs,

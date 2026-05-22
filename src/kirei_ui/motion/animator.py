@@ -9,6 +9,18 @@ from kirei_ui.utils import attached_list
 
 
 class KireiAnimator:
+    """Static helpers for the animation primitives used across KireiUI.
+
+    All methods animate a Qt property on a widget (or a graphics
+    effect) using :class:`QPropertyAnimation` with an out-cubic easing
+    curve. Active animations are kept alive on the widget under the
+    ``_kirei_animations`` attribute via :func:`attached_list` so
+    PySide6 will not garbage-collect them mid-flight.
+
+    When ``enabled=False`` the helpers skip the animation entirely and
+    apply the end value synchronously, returning ``None``.
+    """
+
     @staticmethod
     def animate_property(
         widget: QWidget,
@@ -19,6 +31,13 @@ class KireiAnimator:
         *,
         enabled: bool = True,
     ) -> QPropertyAnimation | None:
+        """Animate any Qt property on ``widget`` from ``start_value`` to ``end_value``.
+
+        ``duration`` defaults to 180ms. ``property_name`` may be a
+        property exposed by Qt (in which case the matching ``setX``
+        method is preferred when animations are disabled) or a custom
+        Qt dynamic property.
+        """
         if not enabled:
             _set_target(widget, property_name, end_value)
             return None
@@ -41,6 +60,12 @@ class KireiAnimator:
         *,
         enabled: bool = True,
     ) -> QPropertyAnimation | None:
+        """Fade ``widget`` in from opacity 0 → 1, calling :meth:`show` first.
+
+        Reuses an existing :class:`QGraphicsOpacityEffect` when one is
+        already attached, otherwise installs a new one. When animations
+        are disabled, the opacity is set to 1.0 synchronously.
+        """
         effect = widget.graphicsEffect()
         if not isinstance(effect, QGraphicsOpacityEffect):
             effect = QGraphicsOpacityEffect(widget)
@@ -71,6 +96,12 @@ class KireiAnimator:
         *,
         enabled: bool = True,
     ) -> QPropertyAnimation | None:
+        """Fade ``widget`` from opacity 1 → 0.
+
+        Does not call :meth:`hide` — connect to the returned
+        animation's ``finished`` signal if you need to hide the widget
+        when the fade-out completes.
+        """
         effect = widget.graphicsEffect()
         if not isinstance(effect, QGraphicsOpacityEffect):
             effect = QGraphicsOpacityEffect(widget)
@@ -101,6 +132,11 @@ class KireiAnimator:
         *,
         enabled: bool = True,
     ) -> QPropertyAnimation | None:
+        """Animate ``maximumWidth`` between two values.
+
+        Sets ``minimumWidth`` to the smaller of the two endpoints so
+        the widget can actually shrink to the target.
+        """
         widget.setMinimumWidth(min(start_width, end_width))
         return KireiAnimator.animate_property(
             widget,
@@ -120,6 +156,11 @@ class KireiAnimator:
         *,
         enabled: bool = True,
     ) -> QPropertyAnimation | None:
+        """Animate ``maximumHeight`` between two values.
+
+        Sets ``minimumHeight`` to the smaller of the two endpoints so
+        the widget can actually shrink to the target.
+        """
         widget.setMinimumHeight(min(start_height, end_height))
         return KireiAnimator.animate_property(
             widget,
