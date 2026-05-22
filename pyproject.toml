@@ -69,6 +69,7 @@ include = ["kirei_ui*"]
 
 [tool.setuptools.package-data]
 kirei_ui = [
+    "resources/*.png",
     "resources/qss/*.qss",
     "resources/icons/*.svg",
     "resources/icons/fluent/**/*.svg",
