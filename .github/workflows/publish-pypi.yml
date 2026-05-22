@@ -61,7 +61,7 @@ jobs:
           print(f"Resolved version: {version}")
           PY
 
-      - name: Sync pyproject version
+      - name: Sync project versions
         shell: bash
         run: |
           VERSION="${{ steps.version.outputs.version }}"
@@ -71,18 +71,32 @@ jobs:
           import os
 
           version = os.environ["VERSION"]
-          path = Path("pyproject.toml")
-          content = path.read_text(encoding="utf-8")
-          updated, count = re.subn(
+
+          pyproject = Path("pyproject.toml")
+          py_content = pyproject.read_text(encoding="utf-8")
+          py_updated, py_count = re.subn(
               r'(?m)^version\s*=\s*"[^"]+"\s*$',
               f'version = "{version}"',
-              content,
+              py_content,
               count=1,
           )
-          if count != 1:
+          if py_count != 1:
               raise SystemExit("Failed to update version in pyproject.toml")
-          path.write_text(updated, encoding="utf-8")
-          print(f"pyproject.toml version synced to {version}")
+          pyproject.write_text(py_updated, encoding="utf-8")
+
+          init_file = Path("src/kirei_ui/__init__.py")
+          init_content = init_file.read_text(encoding="utf-8")
+          init_updated, init_count = re.subn(
+              r'(?m)^__version__\s*=\s*"[^"]+"\s*$',
+              f'__version__ = "{version}"',
+              init_content,
+              count=1,
+          )
+          if init_count != 1:
+              raise SystemExit("Failed to update __version__ in src/kirei_ui/__init__.py")
+          init_file.write_text(init_updated, encoding="utf-8")
+
+          print(f"Version synced to {version} in pyproject.toml and src/kirei_ui/__init__.py")
           PY
         env:
           VERSION: ${{ steps.version.outputs.version }}
