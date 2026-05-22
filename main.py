@@ -1,33 +1,41 @@
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLabel
+from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
-from kirei_ui import KireiApp, KireiWindow
+from kirei_ui import KireiApp, KireiButton, KireiWindow
 
 
 def main() -> int:
-    app = KireiApp(
-        application_name="KireiUI Demo",
-        organization_name="KireiUI",
-    )
+    app = KireiApp()
+    # app = KireiApp(qss_files=["assets/app.qss"])
+    # app.load_qss("assets/app.qss")
 
-    window = KireiWindow(
-        title="KireiUI Window Test",
-        width=900,
-        height=600,
-    )
+    root = QWidget()
+    layout = QVBoxLayout(root)
+    layout.setContentsMargins(32, 32, 32, 32)
+    layout.setSpacing(16)
 
-    label = QLabel("Hello KireiUI")
-    label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-    label.setStyleSheet("""
-        QLabel {
-            font-size: 28px;
-            font-weight: 600;
-            color: #1f2937;
-            background-color: #f7f8fa;
-        }
-    """)
+    row = QHBoxLayout()
+    row.setSpacing(8)
 
-    window.set_content(label)
+    row.addWidget(KireiButton("Default"))
+    row.addWidget(KireiButton("Primary").primary())
+    row.addWidget(KireiButton("Link").link())
+    row.addWidget(KireiButton("Subtle").subtle())
+    row.addWidget(KireiButton("Danger").danger())
+    row.addWidget(KireiButton("Warning").warning())
+    row.addStretch()
+
+    compact_row = QHBoxLayout()
+    compact_row.setSpacing(8)
+
+    compact_row.addWidget(KireiButton("Compact").compact())
+    compact_row.addWidget(KireiButton("Compact Primary").primary().compact())
+    compact_row.addStretch()
+
+    layout.addLayout(row)
+    layout.addLayout(compact_row)
+    layout.addStretch()
+
+    window = KireiWindow().title("KireiUI AUI Button Test").size(900, 600).content(root)
     window.show()
 
     return app.run()
