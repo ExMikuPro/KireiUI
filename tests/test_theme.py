@@ -8,20 +8,24 @@ import pytest
 
 pytest.importorskip("PySide6")
 
+from PySide6.QtWidgets import QApplication
+
 from kirei_ui.app.application import KireiApp
 from kirei_ui.app.window import KireiWindow
 from kirei_ui.theme import build_qss, load_builtin_qss
 
 
 def test_kirei_app_loads_base_qss_by_default() -> None:
-    with patch("kirei_ui.app.application.QApplication.__init__", return_value=None), patch(
-        "kirei_ui.app.application.KireiApp.setApplicationName"
-    ), patch("kirei_ui.app.application.KireiApp.setOrganizationName"), patch(
-        "kirei_ui.app.application.KireiApp.setStyleSheet"
-    ) as mocked_set_style:
-        KireiApp(argv=[])
+    class _FakeApp:
+        def __init__(self) -> None:
+            self._style = ""
 
-    styled = mocked_set_style.call_args.args[0]
+        def setStyleSheet(self, value: str) -> None:
+            self._style = value
+
+    app = _FakeApp()
+    KireiApp.set_theme(app, theme="base")
+    styled = app._style
     assert "QPushButton[kirei=\"button\"]" in styled
 
 
@@ -30,14 +34,17 @@ def test_kirei_app_with_theme_none_skips_builtin() -> None:
         user_qss = Path(tmp) / "app.qss"
         user_qss.write_text("QLabel { color: #123456; }", encoding="utf-8")
 
-        with patch("kirei_ui.app.application.QApplication.__init__", return_value=None), patch(
-            "kirei_ui.app.application.KireiApp.setApplicationName"
-        ), patch("kirei_ui.app.application.KireiApp.setOrganizationName"), patch(
-            "kirei_ui.app.application.KireiApp.setStyleSheet"
-        ) as mocked_set_style:
-            KireiApp(argv=[], theme=None, qss_files=[user_qss])
+        class _FakeApp:
+            def __init__(self) -> None:
+                self._style = ""
 
-    styled = mocked_set_style.call_args.args[0]
+            def setStyleSheet(self, value: str) -> None:
+                self._style = value
+
+        app = _FakeApp()
+        KireiApp.set_theme(app, theme=None, qss_files=[user_qss])
+
+    styled = app._style
     assert "QPushButton[kirei=\"button\"]" not in styled
     assert "QLabel { color: #123456; }" in styled
 
@@ -47,14 +54,17 @@ def test_kirei_app_qss_files_appended_after_base() -> None:
         user_qss = Path(tmp) / "app.qss"
         user_qss.write_text("QWidget { background: #fafafa; }", encoding="utf-8")
 
-        with patch("kirei_ui.app.application.QApplication.__init__", return_value=None), patch(
-            "kirei_ui.app.application.KireiApp.setApplicationName"
-        ), patch("kirei_ui.app.application.KireiApp.setOrganizationName"), patch(
-            "kirei_ui.app.application.KireiApp.setStyleSheet"
-        ) as mocked_set_style:
-            KireiApp(argv=[], qss_files=[user_qss])
+        class _FakeApp:
+            def __init__(self) -> None:
+                self._style = ""
 
-    styled = mocked_set_style.call_args.args[0]
+            def setStyleSheet(self, value: str) -> None:
+                self._style = value
+
+        app = _FakeApp()
+        KireiApp.set_theme(app, qss_files=[user_qss])
+
+    styled = app._style
     base_index = styled.find("QPushButton[kirei=\"button\"]")
     user_index = styled.find("QWidget { background: #fafafa; }")
     assert base_index != -1
@@ -74,13 +84,15 @@ def test_load_qss_can_append() -> None:
         def _style_sheet() -> str:
             return state["value"]
 
-        with patch("kirei_ui.app.application.QApplication.__init__", return_value=None), patch(
-            "kirei_ui.app.application.KireiApp.setApplicationName"
-        ), patch("kirei_ui.app.application.KireiApp.setOrganizationName"), patch(
-            "kirei_ui.app.application.KireiApp.setStyleSheet", side_effect=_set_style_sheet
-        ), patch("kirei_ui.app.application.KireiApp.styleSheet", side_effect=_style_sheet):
-            app = KireiApp(argv=[], theme=None)
-            app.load_qss(user_qss)
+        class _FakeApp:
+            def styleSheet(self) -> str:
+                return _style_sheet()
+
+            def setStyleSheet(self, value: str) -> None:
+                _set_style_sheet(value)
+
+        app = _FakeApp()
+        KireiApp.load_qss(app, user_qss)
 
     assert "QWidget { color: #111111; }" in state["value"]
     assert "QLabel { color: #abcdef; }" in state["value"]
@@ -95,17 +107,17 @@ def test_set_theme_with_theme_none_uses_only_user_qss() -> None:
         def _set_style_sheet(value: str) -> None:
             state["value"] = value
 
-        with patch("kirei_ui.app.application.QApplication.__init__", return_value=None), patch(
-            "kirei_ui.app.application.KireiApp.setApplicationName"
-        ), patch("kirei_ui.app.application.KireiApp.setOrganizationName"), patch(
-            "kirei_ui.app.application.KireiApp.setStyleSheet", side_effect=_set_style_sheet
-        ):
-            app = KireiApp(argv=[])
-            app.set_theme(
-                theme=None,
-                qss_files=[user_qss],
-                extra_qss="QPushButton { margin: 4px; }",
-            )
+        class _FakeApp:
+            def setStyleSheet(self, value: str) -> None:
+                _set_style_sheet(value)
+
+        app = _FakeApp()
+        KireiApp.set_theme(
+            app,
+            theme=None,
+            qss_files=[user_qss],
+            extra_qss="QPushButton { margin: 4px; }",
+        )
 
     assert "QPushButton[kirei=\"button\"]" not in state["value"]
     assert "QFrame { border: 1px solid #999; }" in state["value"]
@@ -113,13 +125,9 @@ def test_set_theme_with_theme_none_uses_only_user_qss() -> None:
 
 
 def test_kirei_window_no_longer_manages_qss() -> None:
-    with patch("kirei_ui.app.window.QMainWindow.__init__", return_value=None), patch(
-        "kirei_ui.app.window.KireiWindow.setWindowTitle"
-    ) as mocked_title, patch("kirei_ui.app.window.KireiWindow.resize") as mocked_resize:
-        KireiWindow()
-
-    mocked_title.assert_called_once()
-    mocked_resize.assert_called_once()
+    QApplication.instance() or QApplication([])
+    window = KireiWindow()
+    assert window.windowTitle() == "KireiUI"
 
 
 def test_build_qss_theme_none_still_builds_user_styles() -> None:

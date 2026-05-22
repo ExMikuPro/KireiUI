@@ -1,6 +1,7 @@
 from kirei_ui import (
     KireiCheckbox,
     KireiComboBox,
+    KireiDivider,
     KireiInput,
     KireiLabel,
     KireiPassword,
@@ -21,3 +22,4 @@ def test_new_widget_exports() -> None:
     assert KireiCheckbox is not None
     assert KireiRadio is not None
     assert KireiComboBox is not None
+    assert KireiDivider is not None

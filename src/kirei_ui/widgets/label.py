@@ -36,8 +36,17 @@ class KireiLabel(QLabel):
         self._refresh_style()
         return self
 
+    def role(self, name: str) -> Self:
+        self.setProperty("kireiRole", name)
+        self._refresh_style()
+        return self
+
     def object_name(self, name: str) -> Self:
         self.setObjectName(name)
+        return self
+
+    def tooltip(self, value: str) -> Self:
+        self.setToolTip(value)
         return self
 
     def _refresh_style(self) -> None:

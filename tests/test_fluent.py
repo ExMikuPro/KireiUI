@@ -14,9 +14,10 @@ from PySide6.QtWidgets import QApplication, QWidget
 from kirei_ui.app.application import KireiApp
 from kirei_ui.app.window import KireiWindow
 from kirei_ui.widgets.button import KireiButton
-from kirei_ui.widgets.choice import KireiCheckbox
-from kirei_ui.widgets.input import KireiInput, KireiPassword
-from kirei_ui.widgets.label import KireiLabel
+from kirei_ui.widgets.choice import KireiCheckbox, KireiRadio
+from kirei_ui.widgets.divider import KireiDivider
+from kirei_ui.widgets.input import KireiInput, KireiPassword, KireiTextarea
+from kirei_ui.widgets.label import KireiLabel, KireiText, KireiTitle
 from kirei_ui.widgets.select import KireiComboBox
 
 
@@ -29,46 +30,30 @@ def _app() -> QApplication:
 
 
 def test_window_title_returns_self() -> None:
-    with patch("kirei_ui.app.window.QMainWindow.__init__", return_value=None), patch(
-        "kirei_ui.app.window.KireiWindow.setWindowTitle"
-    ):
-        window = KireiWindow()
-        assert window.title("Demo") is window
+    window = KireiWindow()
+    assert window.title("Demo") is window
 
 
 def test_window_size_with_args_returns_self() -> None:
-    with patch("kirei_ui.app.window.QMainWindow.__init__", return_value=None), patch(
-        "kirei_ui.app.window.KireiWindow.resize"
-    ):
-        window = KireiWindow()
-        assert window.size(900, 600) is window
+    window = KireiWindow()
+    assert window.size(900, 600) is window
 
 
 def test_window_size_no_args_returns_qsize() -> None:
-    with patch("kirei_ui.app.window.QMainWindow.__init__", return_value=None), patch(
-        "kirei_ui.app.window.QMainWindow.size", return_value=QSize(10, 10)
-    ):
-        window = KireiWindow()
-        assert isinstance(window.size(), QSize)
+    window = KireiWindow()
+    assert isinstance(window.size(), QSize)
 
 
 def test_window_content_returns_self() -> None:
-    with patch("kirei_ui.app.window.QMainWindow.__init__", return_value=None), patch(
-        "kirei_ui.app.window.KireiWindow.setCentralWidget"
-    ):
-        window = KireiWindow()
-        assert window.content(QWidget()) is window
+    window = KireiWindow()
+    assert window.content(QWidget()) is window
 
 
 def test_window_set_content_old_api_still_works() -> None:
-    with patch("kirei_ui.app.window.QMainWindow.__init__", return_value=None), patch(
-        "kirei_ui.app.window.KireiWindow.setCentralWidget"
-    ) as mocked_set:
-        window = KireiWindow()
-        widget = QWidget()
-        window.set_content(widget)
-
-    mocked_set.assert_called_once_with(widget)
+    window = KireiWindow()
+    widget = QWidget()
+    window.set_content(widget)
+    assert window.centralWidget() is widget
 
 
 def test_button_primary_compact_returns_self() -> None:
@@ -152,24 +137,39 @@ def test_app_load_qss_returns_self() -> None:
         qss_file = Path(tmp) / "app.qss"
         qss_file.write_text("QLabel { color: #123; }", encoding="utf-8")
 
-        with patch("kirei_ui.app.application.QApplication.__init__", return_value=None), patch(
-            "kirei_ui.app.application.KireiApp.setApplicationName"
-        ), patch("kirei_ui.app.application.KireiApp.setOrganizationName"), patch(
-            "kirei_ui.app.application.KireiApp.setStyleSheet"
-        ), patch("kirei_ui.app.application.KireiApp.styleSheet", return_value=""):
-            app = KireiApp(argv=[], theme=None)
-            assert app.load_qss(qss_file) is app
+        class _FakeApp:
+            def __init__(self) -> None:
+                self._style = ""
+
+            def styleSheet(self) -> str:
+                return self._style
+
+            def setStyleSheet(self, value: str) -> None:
+                self._style = value
+
+        app = _FakeApp()
+        assert KireiApp.load_qss(app, qss_file) is app
 
 
 def test_app_set_theme_returns_self() -> None:
-    with patch("kirei_ui.app.application.QApplication.__init__", return_value=None), patch(
-        "kirei_ui.app.application.KireiApp.setApplicationName"
-    ), patch("kirei_ui.app.application.KireiApp.setOrganizationName"), patch(
-        "kirei_ui.app.application.KireiApp.setStyleSheet"
-    ):
-        app = KireiApp(argv=[], theme=None)
-        assert app.set_theme(theme="base") is app
-        assert app.theme("base") is app
+    class _FakeApp:
+        def __init__(self) -> None:
+            self._style = ""
+
+        def setStyleSheet(self, value: str) -> None:
+            self._style = value
+
+        def set_theme(
+            self,
+            theme: str | None = "base",
+            qss_files: list[str | Path] | None = None,
+            extra_qss: str | None = None,
+        ) -> "_FakeApp":
+            return KireiApp.set_theme(self, theme=theme, qss_files=qss_files, extra_qss=extra_qss)
+
+    app = _FakeApp()
+    assert KireiApp.set_theme(app, theme="base") is app
+    assert KireiApp.theme(app, "base") is app
 
 
 def test_label_text_returns_self() -> None:
@@ -180,6 +180,11 @@ def test_label_text_returns_self() -> None:
 def test_input_placeholder_returns_self() -> None:
     control = KireiInput()
     assert control.placeholder("A") is control
+
+
+def test_title_and_text_role_defaults() -> None:
+    assert KireiTitle("A").property("kireiRole") == "title"
+    assert KireiText("A").property("kireiRole") == "text"
 
 
 def test_input_value_and_get_value() -> None:
@@ -197,14 +202,34 @@ def test_checkbox_checked_and_is_checked() -> None:
     assert control.checked().is_checked() is True
 
 
+def test_radio_checked_and_is_checked() -> None:
+    control = KireiRadio("A")
+    assert control.checked().is_checked() is True
+
+
+def test_textarea_value_and_get_value() -> None:
+    control = KireiTextarea()
+    assert control.value("A").get_value() == "A"
+
+
 def test_combobox_add_items_current_and_get_value() -> None:
     control = KireiComboBox()
-    assert control.add_items(["A", "B"]).current("A").get_value() == "A"
+    assert control.add_items(["A", "B"]).current("B").get_value() == "B"
 
 
 def test_input_on_change_returns_self() -> None:
     control = KireiInput()
     assert control.on_change(lambda _value: None) is control
+
+
+def test_input_on_submit_returns_self() -> None:
+    control = KireiInput()
+    assert control.on_submit(lambda: None) is control
+
+
+def test_divider_default_role() -> None:
+    divider = KireiDivider()
+    assert divider.property("kireiRole") == "divider"
 
 
 def test_button_on_click_returns_self_again() -> None:

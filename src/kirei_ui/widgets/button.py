@@ -43,28 +43,29 @@ class KireiButton(QPushButton):
 
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setProperty("kirei", "button")
+        self.setProperty("kireiState", "normal")
 
         self.set_variant(variant)
         self.set_size(size)
 
     def set_variant(self, variant: ButtonVariant) -> None:
         self._variant = variant
+        self.setProperty("kireiVariant", variant)
+        # Backward compatibility for older QSS selectors.
         self.setProperty("variant", variant)
         self._refresh_style()
 
     def set_size(self, size: ButtonSize) -> None:
         self._size = size
+        self.setProperty("kireiSize", size)
+        # Backward compatibility for older QSS selectors.
         self.setProperty("size", size)
-
-        if size == "compact":
-            self.setMinimumHeight(28)
-        else:
-            self.setMinimumHeight(32)
 
         self._refresh_style()
 
     def set_loading(self, loading: bool) -> None:
         self._loading = loading
+        self.setProperty("kireiState", "loading" if loading else "normal")
         self.setEnabled(not loading)
 
         if loading:

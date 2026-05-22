@@ -23,33 +23,33 @@ def main() -> int:
         KireiVStack()
         .padding(32)
         .spacing(16)
-        .add(KireiTitle("KireiUI Form Demo"))
-        .add(KireiText("This page demonstrates basic KireiUI controls."))
+        .add(KireiTitle("KireiUI 表单示例"))
+        .add(KireiText("本页面展示 KireiUI 的基础表单控件。"))
         .add(
             KireiForm()
             .spacing(12)
-            .add_row("Username", KireiInput().placeholder("Enter username").clearable())
-            .add_row("Password", KireiPassword().placeholder("Enter password"))
-            .add_row("Bio", KireiTextarea().placeholder("Write something..."))
-            .add_row("Remember me", KireiCheckbox("Enabled").checked())
+            .add_row("用户名", KireiInput().placeholder("请输入用户名").clearable())
+            .add_row("密码", KireiPassword().placeholder("请输入密码"))
+            .add_row("简介", KireiTextarea().placeholder("写点什么..."))
+            .add_row("记住我", KireiCheckbox("启用").checked())
             .add_row(
-                "Role",
-                KireiComboBox().add_items(["User", "Admin", "Guest"]).current("User"),
+                "角色",
+                KireiComboBox().add_items(["用户", "管理员", "访客"]).current("用户"),
             )
             .add_row(
-                "Status",
-                KireiHStack().spacing(8).add(KireiRadio("Active").checked()).add(KireiRadio("Paused")),
+                "状态",
+                KireiHStack().spacing(8).add(KireiRadio("启用").checked()).add(KireiRadio("暂停")),
             )
         )
         .add(
             KireiHStack()
             .stretch()
-            .add(KireiButton("Cancel").subtle())
-            .add(KireiButton("Submit").primary().on_click(lambda: print("submit")))
+            .add(KireiButton("取消").subtle())
+            .add(KireiButton("提交").primary().on_click(lambda: print("提交")))
         )
     )
 
-    window = KireiWindow().title("KireiUI Form Demo").size(900, 600).content(root)
+    window = KireiWindow().title("KireiUI 表单示例").size(900, 600).content(root)
     window.show()
 
     return app.run()

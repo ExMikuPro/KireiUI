@@ -21,6 +21,7 @@ from typing_extensions import Self
 class KireiHStack(QWidget):
     def __init__(self, *widgets: QWidget) -> None:
         super().__init__()
+        self.setProperty("kirei", "hstack")
         self._layout = QHBoxLayout(self)
         for widget in widgets:
             self.add(widget)
@@ -60,6 +61,7 @@ class KireiHStack(QWidget):
 class KireiVStack(QWidget):
     def __init__(self, *widgets: QWidget) -> None:
         super().__init__()
+        self.setProperty("kirei", "vstack")
         self._layout = QVBoxLayout(self)
         for widget in widgets:
             self.add(widget)
@@ -190,6 +192,7 @@ class KireiScroll(QScrollArea):
 class KireiPanel(QFrame):
     def __init__(self) -> None:
         super().__init__()
+        self.setProperty("kirei", "panel")
         self._content_layout = QVBoxLayout(self)
 
     def content(self, widget: QWidget) -> Self:
@@ -206,6 +209,8 @@ class KireiPanel(QFrame):
         return self
 
     def variant(self, name: str) -> Self:
+        self.setProperty("kireiVariant", name)
+        # Backward compatibility for older QSS selectors.
         self.setProperty("variant", name)
         return self
 

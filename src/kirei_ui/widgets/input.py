@@ -26,8 +26,8 @@ class KireiInput(QLineEdit):
     def get_value(self) -> str:
         return self.text()
 
-    def clearable(self) -> Self:
-        self.setClearButtonEnabled(True)
+    def clearable(self, value: bool = True) -> Self:
+        self.setClearButtonEnabled(value)
         return self
 
     def readonly(self, value: bool = True) -> Self:

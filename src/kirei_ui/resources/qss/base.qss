@@ -88,34 +88,44 @@ QPushButton[kirei="button"]:disabled {
     color: #A5ADBA;
 }
 
+QPushButton[kirei="button"][kireiState="loading"] {
+    color: #6B778C;
+}
+
+QPushButton[kirei="button"][kireiSize="compact"],
 QPushButton[kirei="button"][size="compact"] {
     min-height: 28px;
     padding: 0 8px;
     font-size: 13px;
 }
 
+QPushButton[kirei="button"][kireiVariant="primary"],
 QPushButton[kirei="button"][variant="primary"] {
     background-color: #0052CC;
     border-color: #0052CC;
     color: #FFFFFF;
 }
 
+QPushButton[kirei="button"][kireiVariant="primary"]:hover,
 QPushButton[kirei="button"][variant="primary"]:hover {
     background-color: #0065FF;
     border-color: #0065FF;
 }
 
+QPushButton[kirei="button"][kireiVariant="primary"]:pressed,
 QPushButton[kirei="button"][variant="primary"]:pressed {
     background-color: #0747A6;
     border-color: #0747A6;
 }
 
+QPushButton[kirei="button"][kireiVariant="primary"]:disabled,
 QPushButton[kirei="button"][variant="primary"]:disabled {
     background-color: #DFE1E6;
     border-color: #DFE1E6;
     color: #A5ADBA;
 }
 
+QPushButton[kirei="button"][kireiVariant="link"],
 QPushButton[kirei="button"][variant="link"] {
     background-color: transparent;
     border-color: transparent;
@@ -124,6 +134,7 @@ QPushButton[kirei="button"][variant="link"] {
     padding-right: 4px;
 }
 
+QPushButton[kirei="button"][kireiVariant="link"]:hover,
 QPushButton[kirei="button"][variant="link"]:hover {
     background-color: transparent;
     border-color: transparent;
@@ -131,70 +142,83 @@ QPushButton[kirei="button"][variant="link"]:hover {
     text-decoration: underline;
 }
 
+QPushButton[kirei="button"][kireiVariant="link"]:pressed,
 QPushButton[kirei="button"][variant="link"]:pressed {
     color: #0747A6;
 }
 
+QPushButton[kirei="button"][kireiVariant="subtle"],
 QPushButton[kirei="button"][variant="subtle"] {
     background-color: transparent;
     border-color: transparent;
     color: #42526E;
 }
 
+QPushButton[kirei="button"][kireiVariant="subtle"]:hover,
 QPushButton[kirei="button"][variant="subtle"]:hover {
     background-color: #EBECF0;
     border-color: transparent;
     color: #172B4D;
 }
 
+QPushButton[kirei="button"][kireiVariant="subtle"]:pressed,
 QPushButton[kirei="button"][variant="subtle"]:pressed {
     background-color: #DFE1E6;
     color: #172B4D;
 }
 
+QPushButton[kirei="button"][kireiVariant="danger"],
 QPushButton[kirei="button"][variant="danger"] {
     background-color: #DE350B;
     border-color: #DE350B;
     color: #FFFFFF;
 }
 
+QPushButton[kirei="button"][kireiVariant="danger"]:hover,
 QPushButton[kirei="button"][variant="danger"]:hover {
     background-color: #FF5630;
     border-color: #FF5630;
 }
 
+QPushButton[kirei="button"][kireiVariant="danger"]:pressed,
 QPushButton[kirei="button"][variant="danger"]:pressed {
     background-color: #BF2600;
     border-color: #BF2600;
 }
 
+QPushButton[kirei="button"][kireiVariant="warning"],
 QPushButton[kirei="button"][variant="warning"] {
     background-color: #FFAB00;
     border-color: #FFAB00;
     color: #172B4D;
 }
 
+QPushButton[kirei="button"][kireiVariant="warning"]:hover,
 QPushButton[kirei="button"][variant="warning"]:hover {
     background-color: #FFC400;
     border-color: #FFC400;
 }
 
+QPushButton[kirei="button"][kireiVariant="warning"]:pressed,
 QPushButton[kirei="button"][variant="warning"]:pressed {
     background-color: #FF991F;
     border-color: #FF991F;
 }
 
+QPushButton[kirei="button"][kireiVariant="success"],
 QPushButton[kirei="button"][variant="success"] {
     background-color: #00875A;
     border-color: #00875A;
     color: #FFFFFF;
 }
 
+QPushButton[kirei="button"][kireiVariant="success"]:hover,
 QPushButton[kirei="button"][variant="success"]:hover {
     background-color: #36B37E;
     border-color: #36B37E;
 }
 
+QPushButton[kirei="button"][kireiVariant="success"]:pressed,
 QPushButton[kirei="button"][variant="success"]:pressed {
     background-color: #006644;
     border-color: #006644;
@@ -318,11 +342,17 @@ QComboBox QAbstractItemView {
    ========================= */
 QCheckBox,
 QRadioButton {
-    spacing: 8px;
+    spacing: 6px;
     color: #172B4D;
 }
 
 QCheckBox:disabled,
 QRadioButton:disabled {
     color: #A5ADBA;
+}
+
+QFrame[kireiRole="divider"] {
+    color: #DFE1E6;
+    background-color: #DFE1E6;
+    min-height: 1px;
 }

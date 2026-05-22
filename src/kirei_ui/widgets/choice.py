@@ -25,11 +25,8 @@ class KireiCheckbox(QCheckBox):
         return self.isChecked()
 
     def on_change(self, callback: Callable[[bool], object]) -> Self:
-        def handler(value: int) -> object:
-            return callback(bool(value))
-
-        saved = self._keep_callback(handler)
-        self.stateChanged.connect(saved)
+        handler = self._keep_callback(callback)
+        self.toggled.connect(handler)
         return self
 
     def enabled(self, value: bool = True) -> Self:
