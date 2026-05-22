@@ -74,7 +74,7 @@ jobs:
           path = Path("pyproject.toml")
           content = path.read_text(encoding="utf-8")
           updated, count = re.subn(
-              r'(?m)^version\\s*=\\s*\"[^\"]+\"\\s*$',
+              r'(?m)^version\s*=\s*"[^"]+"\s*$',
               f'version = "{version}"',
               content,
               count=1,
