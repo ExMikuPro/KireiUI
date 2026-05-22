@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import overload
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QWidget
 from typing_extensions import Self
@@ -11,7 +13,15 @@ class KireiLabel(QLabel):
         self.setProperty("kirei", "label")
         self.setProperty("kireiRole", "label")
 
-    def text(self, value: str) -> Self:
+    @overload
+    def text(self) -> str: ...
+
+    @overload
+    def text(self, value: str) -> Self: ...
+
+    def text(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().text()
         self.setText(value)
         return self
 

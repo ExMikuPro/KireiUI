@@ -169,6 +169,10 @@ class KireiButton(QPushButton):
         self.clicked.connect(handler)
         return self
 
+    @overload
+    def icon(self) -> QIcon: ...
+
+    @overload
     def icon(
         self,
         value: str | QIcon,
@@ -176,7 +180,18 @@ class KireiButton(QPushButton):
         style: str = "regular",
         size: int = 20,
         strict: bool = False,
-    ) -> Self:
+    ) -> Self: ...
+
+    def icon(
+        self,
+        value: str | QIcon | None = None,
+        *,
+        style: str = "regular",
+        size: int = 20,
+        strict: bool = False,
+    ) -> QIcon | Self:
+        if value is None:
+            return super().icon()
         if isinstance(value, QIcon):
             self.setIcon(value)
             return self

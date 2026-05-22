@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import overload
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
@@ -75,7 +76,7 @@ class KireiDialog(QDialog, KireiMotionMixin):
         animation.finished.connect(finalize)
         return self
 
-    def open(self) -> Self:
+    def open(self) -> Self:  # type: ignore[override]
         self.show_animated()
         return self
 
@@ -135,7 +136,7 @@ class KireiConfirm(QDialog, KireiMotionMixin):
         self._cancel_btn.clicked.connect(keep_callback(self, callback))
         return self
 
-    def open(self) -> Self:
+    def open(self) -> Self:  # type: ignore[override]
         enabled = self.should_animate()
         duration = self.resolved_animation_duration()
         KireiAnimator.fade_in(self, duration=duration, enabled=enabled)
@@ -169,7 +170,15 @@ class KireiMessageBox(QMessageBox, KireiMotionMixin):
         self.setWindowTitle(value)
         return self
 
-    def text(self, value: str) -> Self:
+    @overload
+    def text(self) -> str: ...
+
+    @overload
+    def text(self, value: str) -> Self: ...
+
+    def text(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().text()
         self.setText(value)
         return self
 
@@ -179,7 +188,7 @@ class KireiMessageBox(QMessageBox, KireiMotionMixin):
         refresh_style(self)
         return self
 
-    def warning(self) -> Self:
+    def warning(self) -> Self:  # type: ignore[override]
         self.setProperty("kireiVariant", "warning")
         self.setIcon(QMessageBox.Icon.Warning)
         refresh_style(self)
@@ -191,7 +200,7 @@ class KireiMessageBox(QMessageBox, KireiMotionMixin):
         refresh_style(self)
         return self
 
-    def open(self) -> Self:
+    def open(self) -> Self:  # type: ignore[override]
         enabled = self.should_animate()
         duration = self.resolved_animation_duration()
         KireiAnimator.fade_in(self, duration=duration, enabled=enabled)
@@ -243,7 +252,7 @@ class KireiDrawer(QDialog, KireiMotionMixin):
         refresh_style(self)
         return self
 
-    def open(self, animated: bool | None = None) -> Self:
+    def open(self, animated: bool | None = None) -> Self:  # type: ignore[override]
         target = max(self._expanded_width, self.sizeHint().width())
         self.setMaximumWidth(0)
         self.show()

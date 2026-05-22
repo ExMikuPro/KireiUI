@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import overload
 
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (
@@ -102,7 +103,7 @@ class KireiSection(QFrame):
         _replace_layout_content(self._content_host, widget)
         return self
 
-    def actions(self, widget: QWidget) -> Self:
+    def set_actions(self, widget: QWidget) -> Self:
         _replace_layout_content(self._actions_host, widget)
         return self
 
@@ -152,7 +153,15 @@ class KireiNavItem(QPushButton):
         self.setProperty("kireiState", "normal")
         self._key = key
 
-    def text(self, value: str) -> Self:
+    @overload
+    def text(self) -> str: ...
+
+    @overload
+    def text(self, value: str) -> Self: ...
+
+    def text(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().text()
         self.setText(value)
         return self
 
@@ -170,6 +179,10 @@ class KireiNavItem(QPushButton):
         self.clicked.connect(saved)
         return self
 
+    @overload
+    def icon(self) -> QIcon: ...
+
+    @overload
     def icon(
         self,
         value: str | QIcon,
@@ -177,7 +190,18 @@ class KireiNavItem(QPushButton):
         style: str = "regular",
         size: int = 20,
         strict: bool = False,
-    ) -> Self:
+    ) -> Self: ...
+
+    def icon(
+        self,
+        value: str | QIcon | None = None,
+        *,
+        style: str = "regular",
+        size: int = 20,
+        strict: bool = False,
+    ) -> QIcon | Self:
+        if value is None:
+            return super().icon()
         if isinstance(value, QIcon):
             self.setIcon(value)
             return self

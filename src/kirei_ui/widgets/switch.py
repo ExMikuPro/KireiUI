@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import overload
 
+from PySide6.QtCore import QSize
 from PySide6.QtWidgets import QCheckBox, QWidget
 from typing_extensions import Self
 
@@ -17,7 +19,15 @@ class KireiSwitch(QCheckBox, KireiMotionMixin):
         self.setProperty("kireiVariant", "default")
         self.setProperty("kireiSize", "default")
 
-    def text(self, value: str) -> Self:
+    @overload
+    def text(self) -> str: ...
+
+    @overload
+    def text(self, value: str) -> Self: ...
+
+    def text(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().text()
         self.setText(value)
         return self
 
@@ -46,7 +56,18 @@ class KireiSwitch(QCheckBox, KireiMotionMixin):
         refresh_style(self)
         return self
 
-    def size(self, name: str) -> Self:
+    def sized(self, name: str) -> Self:
         self.setProperty("kireiSize", name)
         refresh_style(self)
         return self
+
+    @overload
+    def size(self) -> QSize: ...
+
+    @overload
+    def size(self, name: str) -> Self: ...
+
+    def size(self, name: str | None = None) -> QSize | Self:
+        if name is None:
+            return super().size()
+        return self.sized(name)

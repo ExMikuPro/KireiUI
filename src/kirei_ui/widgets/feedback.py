@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import overload
 
+from PySide6.QtCore import QSize
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -95,7 +97,15 @@ class KireiBadge(QLabel):
         self.setProperty("kireiRole", "badge")
         self.setProperty("kireiVariant", "default")
 
-    def text(self, value: str) -> Self:
+    @overload
+    def text(self) -> str: ...
+
+    @overload
+    def text(self, value: str) -> Self: ...
+
+    def text(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().text()
         self.setText(value)
         return self
 
@@ -144,7 +154,6 @@ class KireiTag(QFrame):
     def text(self, value: str) -> Self:
         self._label.setText(value)
         return self
-
     def variant(self, name: str) -> Self:
         self.setProperty("kireiVariant", name)
         refresh_style(self)
@@ -190,7 +199,15 @@ class KireiProgress(QProgressBar, KireiMotionMixin):
         self.setRange(minimum, maximum)
         return self
 
-    def value(self, value: int) -> Self:
+    @overload
+    def value(self) -> int: ...
+
+    @overload
+    def value(self, value: int) -> Self: ...
+
+    def value(self, value: int | None = None) -> int | Self:
+        if value is None:
+            return int(super().value())
         return self.set_value(value)
 
     def set_value(self, value: int, animated: bool | None = None) -> Self:
@@ -255,7 +272,15 @@ class KireiSpinner(QLabel):
         self.setProperty("kireiState", "running")
         self.setProperty("kireiSize", "default")
 
-    def text(self, value: str) -> Self:
+    @overload
+    def text(self) -> str: ...
+
+    @overload
+    def text(self, value: str) -> Self: ...
+
+    def text(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().text()
         self.setText(value)
         return self
 
@@ -274,10 +299,21 @@ class KireiSpinner(QLabel):
     def running(self, value: bool = True) -> Self:
         return self.start() if value else self.stop()
 
-    def size(self, name: str) -> Self:
+    def sized(self, name: str) -> Self:
         self.setProperty("kireiSize", name)
         refresh_style(self)
         return self
+
+    @overload
+    def size(self) -> QSize: ...
+
+    @overload
+    def size(self, name: str) -> Self: ...
+
+    def size(self, name: str | None = None) -> QSize | Self:
+        if name is None:
+            return super().size()
+        return self.sized(name)
 
 
 class KireiEmpty(QWidget):

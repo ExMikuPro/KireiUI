@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import overload
 
 from PySide6.QtWidgets import QCheckBox, QRadioButton, QWidget
 from typing_extensions import Self
@@ -13,7 +14,15 @@ class KireiCheckbox(QCheckBox):
         self.setProperty("kirei", "checkbox")
         self.setProperty("kireiRole", "checkbox")
 
-    def text(self, value: str) -> Self:
+    @overload
+    def text(self) -> str: ...
+
+    @overload
+    def text(self, value: str) -> Self: ...
+
+    def text(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().text()
         self.setText(value)
         return self
 
@@ -49,7 +58,15 @@ class KireiRadio(QRadioButton):
         self.setProperty("kirei", "radio")
         self.setProperty("kireiRole", "radio")
 
-    def text(self, value: str) -> Self:
+    @overload
+    def text(self) -> str: ...
+
+    @overload
+    def text(self, value: str) -> Self: ...
+
+    def text(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().text()
         self.setText(value)
         return self
 

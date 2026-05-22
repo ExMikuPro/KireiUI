@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import overload
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QFormLayout,
@@ -232,7 +234,15 @@ class KireiSplitter(QSplitter):
         self.addWidget(widget)
         return self
 
-    def sizes(self, values: list[int]) -> Self:
+    @overload
+    def sizes(self) -> list[int]: ...
+
+    @overload
+    def sizes(self, values: list[int]) -> Self: ...
+
+    def sizes(self, values: list[int] | None = None) -> list[int] | Self:
+        if values is None:
+            return list(super().sizes())
         self.setSizes(values)
         return self
 

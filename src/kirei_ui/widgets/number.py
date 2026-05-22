@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import overload
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QDoubleSpinBox, QSlider, QSpinBox, QWidget
@@ -27,7 +28,15 @@ class KireiSlider(QSlider):
         self.setRange(minimum, maximum)
         return self
 
-    def value(self, value: int) -> Self:
+    @overload
+    def value(self) -> int: ...
+
+    @overload
+    def value(self, value: int) -> Self: ...
+
+    def value(self, value: int | None = None) -> int | Self:
+        if value is None:
+            return int(super().value())
         self.setValue(value)
         return self
 
@@ -70,7 +79,15 @@ class KireiSpinBox(QSpinBox):
         self.setRange(minimum, maximum)
         return self
 
-    def value(self, value: int) -> Self:
+    @overload
+    def value(self) -> int: ...
+
+    @overload
+    def value(self, value: int) -> Self: ...
+
+    def value(self, value: int | None = None) -> int | Self:
+        if value is None:
+            return int(super().value())
         self.setValue(value)
         return self
 
@@ -81,11 +98,27 @@ class KireiSpinBox(QSpinBox):
         self.setSingleStep(value)
         return self
 
-    def prefix(self, value: str) -> Self:
+    @overload
+    def prefix(self) -> str: ...
+
+    @overload
+    def prefix(self, value: str) -> Self: ...
+
+    def prefix(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().prefix()
         self.setPrefix(value)
         return self
 
-    def suffix(self, value: str) -> Self:
+    @overload
+    def suffix(self) -> str: ...
+
+    @overload
+    def suffix(self, value: str) -> Self: ...
+
+    def suffix(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().suffix()
         self.setSuffix(value)
         return self
 
@@ -113,7 +146,15 @@ class KireiDoubleSpinBox(QDoubleSpinBox):
         self.setRange(minimum, maximum)
         return self
 
-    def value(self, value: float) -> Self:
+    @overload
+    def value(self) -> float: ...
+
+    @overload
+    def value(self, value: float) -> Self: ...
+
+    def value(self, value: float | None = None) -> float | Self:
+        if value is None:
+            return float(super().value())
         self.setValue(value)
         return self
 
@@ -124,15 +165,39 @@ class KireiDoubleSpinBox(QDoubleSpinBox):
         self.setSingleStep(value)
         return self
 
-    def decimals(self, value: int) -> Self:
+    @overload
+    def decimals(self) -> int: ...
+
+    @overload
+    def decimals(self, value: int) -> Self: ...
+
+    def decimals(self, value: int | None = None) -> int | Self:
+        if value is None:
+            return super().decimals()
         self.setDecimals(value)
         return self
 
-    def prefix(self, value: str) -> Self:
+    @overload
+    def prefix(self) -> str: ...
+
+    @overload
+    def prefix(self, value: str) -> Self: ...
+
+    def prefix(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().prefix()
         self.setPrefix(value)
         return self
 
-    def suffix(self, value: str) -> Self:
+    @overload
+    def suffix(self) -> str: ...
+
+    @overload
+    def suffix(self, value: str) -> Self: ...
+
+    def suffix(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return super().suffix()
         self.setSuffix(value)
         return self
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import overload
 
 from PySide6.QtGui import QAction, QColor, QIcon, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
@@ -22,7 +23,15 @@ class KireiAction:
     def __init__(self, text: str = "", parent: QWidget | None = None) -> None:
         self._action = QAction(text, parent)
 
-    def text(self, value: str) -> Self:
+    @overload
+    def text(self) -> str: ...
+
+    @overload
+    def text(self, value: str) -> Self: ...
+
+    def text(self, value: str | None = None) -> str | Self:
+        if value is None:
+            return self._action.text()
         self._action.setText(value)
         return self
 

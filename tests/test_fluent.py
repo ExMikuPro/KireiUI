@@ -376,7 +376,7 @@ def test_card_and_section_chainable() -> None:
     assert (
         card.title("A").description("B").content(QWidget()).footer(QWidget()).variant("x") is card
     )
-    assert section.title("A").description("B").content(QWidget()).actions(QWidget()) is section
+    assert section.title("A").description("B").content(QWidget()).set_actions(QWidget()) is section
 
 
 def test_topbar_sidebar_toolbar_chainable() -> None:
