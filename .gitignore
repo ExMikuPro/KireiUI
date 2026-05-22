@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Build / package
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# PyInstaller
+*.spec
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Type checker / linter cache
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# Qt / PySide generated files
+*.qmlc
+*.jsc
+.qmake.stash
+Makefile
+Makefile.*
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+
+# Logs
+*.log
+logs/
+
+# Local config
+.env
+.env.*
+*.local
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# Project runtime files
+*.sqlite
+*.db

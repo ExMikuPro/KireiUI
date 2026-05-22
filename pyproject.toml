@@ -1,0 +1,93 @@
+[project]
+name = "kirei-ui"
+version = "0.1.0"
+description = "A modern PySide6 UI framework for building elegant desktop tools."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+authors = [
+    { name = "Siling" }
+]
+
+keywords = [
+    "kireiui",
+    "pyside6",
+    "qt6",
+    "ui-framework",
+    "desktop",
+    "widgets",
+    "qss",
+    "design-system"
+]
+
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: User Interfaces",
+    "Topic :: Desktop Environment",
+]
+
+dependencies = [
+    "PySide6>=6.6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.4.0",
+    "black>=24.0.0",
+    "mypy>=1.8.0",
+    "pytest>=8.0.0",
+]
+
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-name/kirei-ui"
+Repository = "https://github.com/your-name/kirei-ui"
+Issues = "https://github.com/your-name/kirei-ui/issues"
+
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["kirei_ui*"]
+
+[tool.setuptools.package-data]
+kirei_ui = [
+    "resources/qss/*.qss",
+    "resources/icons/*.svg",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "UP",
+    "B",
+]
+ignore = []
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+strict = false
