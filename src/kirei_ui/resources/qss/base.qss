@@ -356,3 +356,20 @@ QFrame[kireiRole="divider"] {
     background-color: #DFE1E6;
     min-height: 1px;
 }
+
+/* New semantic roles (structure-first stage) */
+QCheckBox[kireiRole="switch"] {
+    spacing: 6px;
+}
+
+QFrame[kireiRole="alert"],
+QFrame[kireiRole="tag"],
+QWidget[kireiRole="empty"] {
+}
+
+QLabel[kireiRole="badge"],
+QLabel[kireiRole="spinner"] {
+}
+
+QProgressBar[kireiRole="progress"] {
+}

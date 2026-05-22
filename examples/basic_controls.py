@@ -1,20 +1,15 @@
-from kirei_ui import (
-    KireiApp,
+from kirei_ui import KireiDivider, KireiText, KireiTitle
+from kirei_ui.app import KireiApp, KireiWindow
+from kirei_ui.inputs import (
     KireiButton,
     KireiCheckbox,
     KireiComboBox,
-    KireiDivider,
-    KireiForm,
-    KireiHStack,
     KireiInput,
     KireiPassword,
     KireiRadio,
-    KireiText,
     KireiTextarea,
-    KireiTitle,
-    KireiVStack,
-    KireiWindow,
 )
+from kirei_ui.layout import KireiForm, KireiHStack, KireiVStack
 
 
 def main() -> int:
