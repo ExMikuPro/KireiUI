@@ -16,6 +16,14 @@ from kirei_ui.app.window import KireiWindow
 from kirei_ui.widgets.button import KireiButton
 
 
+@pytest.fixture(scope="module", autouse=True)
+def _app() -> QApplication:
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication([])
+    return app
+
+
 def test_window_title_returns_self() -> None:
     with patch("kirei_ui.app.window.QMainWindow.__init__", return_value=None), patch(
         "kirei_ui.app.window.KireiWindow.setWindowTitle"
