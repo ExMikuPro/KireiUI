@@ -1,8 +1,9 @@
 # KireiUI
 
-![KireiUI Logo](https://raw.githubusercontent.com/ExMikuPro/KireiUI/main/docs/Logo.png)
+![KireiUI Logo](https://github.com/ExMikuPro/KireiUI/blob/master/docs/Logo.png?raw=true)
 
-KireiUI is a PySide6 / Qt6 fluent-style UI framework with chainable APIs, themeable QSS, and modular widgets.
+KireiUI is a PySide6 / Qt6 fluent-style UI framework with chainable APIs, themeable QSS, and modular
+widgets.
 
 ## Quick Start
 
