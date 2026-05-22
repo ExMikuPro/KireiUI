@@ -1,0 +1,13 @@
+/* project-level tweak slot for silicon_light */
+QLabel[kireiRole="title"] {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1F2430;
+}
+QLabel[kireiRole="text"] {
+    color: #667085;
+}
+QFrame[kireiRole="divider"] {
+    background: #E8ECF5;
+    color: #E8ECF5;
+}

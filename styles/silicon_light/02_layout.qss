@@ -1,0 +1,32 @@
+QFrame[kirei="panel"],
+QFrame[kirei="card"],
+QFrame[kireiRole="section"] {
+    background: #FFFFFF;
+    border: 1px solid #E8ECF5;
+    border-radius: 16px;
+}
+
+QFrame[kirei="card"]:hover,
+QFrame[kirei="panel"]:hover {
+    border-color: #D5DDF0;
+    background: #FCFDFF;
+}
+
+QLabel[kireiRole="cardTitle"],
+QLabel[kireiRole="sectionTitle"] {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+QLabel[kireiRole="cardDescription"],
+QLabel[kireiRole="sectionDescription"] {
+    color: #667085;
+}
+
+QSplitter::handle {
+    background: #E8ECF5;
+    border-radius: 3px;
+}
+QSplitter::handle:hover {
+    background: #B9C7FF;
+}

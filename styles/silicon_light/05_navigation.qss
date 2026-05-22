@@ -1,0 +1,67 @@
+QFrame[kireiRole="topbar"] {
+    background: #FCFDFF;
+    border: 1px solid #E8ECF5;
+    border-radius: 14px;
+}
+QFrame[kireiRole="sidebar"] {
+    background: #F5F7FE;
+    border: 1px solid #E2E8F6;
+    border-radius: 16px;
+}
+QPushButton[kireiRole="navItem"] {
+    text-align: left;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    padding: 8px 10px;
+    background: transparent;
+}
+QPushButton[kireiRole="navItem"]:hover { background: #EEF2FF; }
+QPushButton[kireiRole="navItem"][kireiState="selected"],
+QPushButton[kireiRole="navItem"][active="true"],
+QPushButton[kireiRole="navItem"][selected="true"] {
+    background: #E9EEFF;
+    color: #5C6CE0;
+    border-color: #D3DCFF;
+}
+
+QFrame[kireiRole="toolbar"] {
+    background: #FFFFFF;
+    border: 1px solid #E8ECF5;
+    border-radius: 14px;
+}
+QFrame[kireiRole="breadcrumbs"] {
+    background: transparent;
+}
+QToolButton[kireiRole="breadcrumbItem"] {
+    border: none;
+    border-radius: 10px;
+    padding: 4px 8px;
+    color: #667085;
+}
+QToolButton[kireiRole="breadcrumbItem"]:hover { background: #EEF2FF; color: #4F5FD9; }
+QMenu[kireiRole="menu"] {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F6;
+    border-radius: 14px;
+    padding: 6px;
+}
+QMenu[kireiRole="menu"]::item { border-radius: 10px; padding: 6px 12px; }
+QMenu[kireiRole="menu"]::item:selected { background: #EEF2FF; color: #4F5FD9; }
+
+QTabWidget::pane {
+    border: 1px solid #E2E8F6;
+    border-radius: 14px;
+    background: #FFFFFF;
+}
+QTabBar::tab {
+    background: #F1F4FC;
+    border: 1px solid #E2E8F6;
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-right: 6px;
+}
+QTabBar::tab:selected {
+    background: #E9EEFF;
+    color: #4F5FD9;
+    border-color: #CBD7FF;
+}

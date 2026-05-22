@@ -1,0 +1,61 @@
+QWidget {
+    color: #1F2430;
+    font-family: "SF Pro Text", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+}
+
+QMainWindow,
+QDialog {
+    background: #F7F9FE;
+}
+
+QFrame {
+    border-radius: 12px;
+}
+
+QToolTip {
+    color: #FFFFFF;
+    background: rgba(31, 36, 48, 220);
+    border: 1px solid rgba(255, 255, 255, 30);
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+QScrollArea {
+    border: none;
+    background: transparent;
+}
+
+QScrollBar:vertical {
+    width: 10px;
+    background: transparent;
+    margin: 4px;
+}
+QScrollBar::handle:vertical {
+    background: #CAD3E8;
+    border-radius: 5px;
+    min-height: 24px;
+}
+QScrollBar::handle:vertical:hover {
+    background: #AEBBDA;
+}
+QScrollBar:horizontal {
+    height: 10px;
+    background: transparent;
+    margin: 4px;
+}
+QScrollBar::handle:horizontal {
+    background: #CAD3E8;
+    border-radius: 5px;
+    min-width: 24px;
+}
+QScrollBar::handle:horizontal:hover {
+    background: #AEBBDA;
+}
+QScrollBar::add-line,
+QScrollBar::sub-line,
+QScrollBar::add-page,
+QScrollBar::sub-page {
+    background: transparent;
+    border: none;
+}
