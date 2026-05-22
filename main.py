@@ -1,10 +1,18 @@
-from kirei_ui import KireiApp, KireiButton, KireiHStack, KireiVStack, KireiWindow
+from PySide6.QtWidgets import QLabel, QLineEdit
+
+from kirei_ui import (
+    KireiApp,
+    KireiButton,
+    KireiForm,
+    KireiGrid,
+    KireiHStack,
+    KireiVStack,
+    KireiWindow,
+)
 
 
 def main() -> int:
     app = KireiApp()
-    # app = KireiApp(qss_files=["assets/app.qss"])
-    # app.load_qss("assets/app.qss")
 
     def on_primary_clicked() -> None:
         print("Primary clicked")
@@ -34,6 +42,19 @@ def main() -> int:
             .add(KireiButton("Compact").compact())
             .add(KireiButton("Compact Primary").primary().compact())
             .stretch()
+        )
+        .add(
+            KireiGrid()
+            .spacing(8)
+            .add_at(QLabel("Grid A"), 0, 0)
+            .add_at(QLabel("Grid B"), 0, 1)
+            .add_at(QLabel("Grid C"), 1, 0, 1, 2)
+        )
+        .add(
+            KireiForm()
+            .spacing(8)
+            .add_row("Name", QLineEdit())
+            .add_row("Email", QLineEdit())
         )
         .stretch()
     )
