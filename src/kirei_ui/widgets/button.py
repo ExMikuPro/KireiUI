@@ -9,6 +9,8 @@ from PySide6.QtWidgets import QPushButton, QWidget
 from typing_extensions import Self
 
 from kirei_ui.icons import KireiIcon
+from kirei_ui.locale import KireiTexts
+from kirei_ui.utils import keep_callback, refresh_style
 
 ButtonVariant = Literal[
     "default",
@@ -46,7 +48,6 @@ class KireiButton(QPushButton):
         self._size: ButtonSize = size
         self._loading = False
         self._normal_text = text
-        self._kirei_callbacks: list[Callable[..., object]] = []
 
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setProperty("kirei", "button")
@@ -60,17 +61,12 @@ class KireiButton(QPushButton):
     def set_variant(self, variant: ButtonVariant) -> None:
         self._variant = variant
         self.setProperty("kireiVariant", variant)
-        # Backward compatibility for older QSS selectors.
-        self.setProperty("variant", variant)
-        self._refresh_style()
+        refresh_style(self)
 
     def set_size(self, size: ButtonSize) -> None:
         self._size = size
         self.setProperty("kireiSize", size)
-        # Backward compatibility for older QSS selectors.
-        self.setProperty("size", size)
-
-        self._refresh_style()
+        refresh_style(self)
 
     def set_loading(self, loading: bool) -> None:
         self._loading = loading
@@ -78,11 +74,11 @@ class KireiButton(QPushButton):
         self.setEnabled(not loading)
 
         if loading:
-            self.setText("处理中...")
+            self.setText(KireiTexts.button_loading)
         else:
             self.setText(self._normal_text)
 
-        self._refresh_style()
+        refresh_style(self)
 
     def variant(self, variant: ButtonVariant) -> Self:
         self.set_variant(variant)
@@ -157,7 +153,7 @@ class KireiButton(QPushButton):
             _ = checked
             return callback()
 
-        self._kirei_callbacks.append(handler)
+        keep_callback(self, handler)
         self.clicked.connect(handler)
         return self
 
@@ -165,7 +161,7 @@ class KireiButton(QPushButton):
         def handler(checked: bool = False) -> object:
             return callback(bool(checked))
 
-        self._kirei_callbacks.append(handler)
+        keep_callback(self, handler)
         self.clicked.connect(handler)
         return self
 
@@ -197,8 +193,3 @@ class KireiButton(QPushButton):
             return self
         self.setIcon(KireiIcon.qicon(value, style=style, size=size, strict=strict))
         return self
-
-    def _refresh_style(self) -> None:
-        self.style().unpolish(self)
-        self.style().polish(self)
-        self.update()

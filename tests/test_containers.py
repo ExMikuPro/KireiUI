@@ -108,7 +108,7 @@ def test_panel_api() -> None:
         .object_name("main_panel")
         is panel
     )
-    assert panel.property("variant") == "card"
+    assert panel.property("kireiVariant") == "card"
     assert panel.objectName() == "main_panel"
 
 

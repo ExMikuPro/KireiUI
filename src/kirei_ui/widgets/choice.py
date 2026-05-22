@@ -6,11 +6,12 @@ from typing import overload
 from PySide6.QtWidgets import QCheckBox, QRadioButton, QWidget
 from typing_extensions import Self
 
+from kirei_ui.utils import keep_callback
+
 
 class KireiCheckbox(QCheckBox):
     def __init__(self, text: str = "", parent: QWidget | None = None) -> None:
         super().__init__(text, parent)
-        self._kirei_callbacks: list[Callable[..., object]] = []
         self.setProperty("kirei", "checkbox")
         self.setProperty("kireiRole", "checkbox")
 
@@ -34,7 +35,7 @@ class KireiCheckbox(QCheckBox):
         return self.isChecked()
 
     def on_change(self, callback: Callable[[bool], object]) -> Self:
-        handler = self._keep_callback(callback)
+        handler = keep_callback(self, callback)
         self.toggled.connect(handler)
         return self
 
@@ -46,15 +47,10 @@ class KireiCheckbox(QCheckBox):
         self.setDisabled(value)
         return self
 
-    def _keep_callback(self, handler: Callable[..., object]) -> Callable[..., object]:
-        self._kirei_callbacks.append(handler)
-        return handler
-
 
 class KireiRadio(QRadioButton):
     def __init__(self, text: str = "", parent: QWidget | None = None) -> None:
         super().__init__(text, parent)
-        self._kirei_callbacks: list[Callable[..., object]] = []
         self.setProperty("kirei", "radio")
         self.setProperty("kireiRole", "radio")
 
@@ -78,7 +74,7 @@ class KireiRadio(QRadioButton):
         return self.isChecked()
 
     def on_change(self, callback: Callable[[bool], object]) -> Self:
-        handler = self._keep_callback(callback)
+        handler = keep_callback(self, callback)
         self.toggled.connect(handler)
         return self
 
@@ -89,7 +85,3 @@ class KireiRadio(QRadioButton):
     def disabled(self, value: bool = True) -> Self:
         self.setDisabled(value)
         return self
-
-    def _keep_callback(self, handler: Callable[..., object]) -> Callable[..., object]:
-        self._kirei_callbacks.append(handler)
-        return handler

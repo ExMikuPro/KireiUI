@@ -54,8 +54,8 @@ def build_qss(
             chunks.append(builtin)
 
     for qss_dir in qss_dirs or []:
-        for qss_file in load_qss_dir(qss_dir, recursive=recursive):
-            dir_qss = load_qss_file(qss_file).strip()
+        for dir_qss_file in load_qss_dir(qss_dir, recursive=recursive):
+            dir_qss = load_qss_file(dir_qss_file).strip()
             if dir_qss:
                 chunks.append(dir_qss)
 

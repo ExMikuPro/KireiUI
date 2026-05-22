@@ -16,8 +16,9 @@ from PySide6.QtWidgets import (
 )
 from typing_extensions import Self
 
+from kirei_ui.locale import KireiTexts
 from kirei_ui.motion import KireiAnimator, KireiMotionMixin
-from kirei_ui.utils import keep_callback, refresh_style
+from kirei_ui.utils import keep_callback, refresh_style, replace_layout_content
 
 
 class KireiDialog(QDialog, KireiMotionMixin):
@@ -41,11 +42,11 @@ class KireiDialog(QDialog, KireiMotionMixin):
         return self
 
     def content(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._content_host, widget)
+        replace_layout_content(self._content_host, widget)
         return self
 
     def footer(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._footer_host, widget)
+        replace_layout_content(self._footer_host, widget)
         return self
 
     def modal(self, value: bool = True) -> Self:
@@ -71,7 +72,7 @@ class KireiDialog(QDialog, KireiMotionMixin):
             effect = self.graphicsEffect()
             if effect is not None:
                 effect.deleteLater()
-                self.setGraphicsEffect(None)
+                self.setGraphicsEffect(None)  # type: ignore[arg-type]
 
         animation.finished.connect(finalize)
         return self
@@ -96,8 +97,8 @@ class KireiConfirm(QDialog, KireiMotionMixin):
         self._description.setProperty("kireiRole", "confirmDescription")
         self._description.setWordWrap(True)
 
-        self._confirm_btn = QPushButton("Confirm")
-        self._cancel_btn = QPushButton("Cancel")
+        self._confirm_btn = QPushButton(KireiTexts.confirm_ok)
+        self._cancel_btn = QPushButton(KireiTexts.confirm_cancel)
 
         self._confirm_btn.clicked.connect(self.accept)
         self._cancel_btn.clicked.connect(self.reject)
@@ -244,7 +245,7 @@ class KireiDrawer(QDialog, KireiMotionMixin):
         return self
 
     def content(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._content_host, widget)
+        replace_layout_content(self._content_host, widget)
         return self
 
     def side(self, value: str) -> Self:
@@ -300,7 +301,7 @@ class KireiPopover(QFrame, KireiMotionMixin):
         self._layout = QVBoxLayout(self)
 
     def content(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._layout, widget)
+        replace_layout_content(self._layout, widget)
         return self
 
     def popup_at(self, widget: QWidget) -> Self:
@@ -325,8 +326,14 @@ class KireiPopover(QFrame, KireiMotionMixin):
         return self
 
 
-class KireiTooltip(KireiMotionMixin):
-    _global_mixin = KireiMotionMixin()
+class KireiTooltip:
+    """Static helper for attaching tooltips with KireiUI motion semantics.
+
+    Tooltips are not full widgets in KireiUI — Qt's native tooltip surface is used.
+    This class is a namespace of static helpers; do not instantiate.
+    """
+
+    _motion = KireiMotionMixin()
 
     @staticmethod
     def apply(widget: QWidget, text: str) -> QWidget:
@@ -336,8 +343,8 @@ class KireiTooltip(KireiMotionMixin):
     @staticmethod
     def show_animated(widget: QWidget, text: str, animated: bool | None = None) -> QWidget:
         widget.setToolTip(text)
-        enabled = KireiTooltip._global_mixin.should_animate(animated)
-        duration = KireiTooltip._global_mixin.resolved_animation_duration()
+        enabled = KireiTooltip._motion.should_animate(animated)
+        duration = KireiTooltip._motion.resolved_animation_duration()
         KireiAnimator.fade_in(widget, duration=duration, enabled=enabled)
         return widget
 
@@ -347,8 +354,8 @@ class KireiTooltip(KireiMotionMixin):
 
     @staticmethod
     def close_animated(widget: QWidget, animated: bool | None = None) -> QWidget:
-        enabled = KireiTooltip._global_mixin.should_animate(animated)
-        duration = KireiTooltip._global_mixin.resolved_animation_duration()
+        enabled = KireiTooltip._motion.should_animate(animated)
+        duration = KireiTooltip._motion.resolved_animation_duration()
         animation = KireiAnimator.fade_out(widget, duration=duration, enabled=enabled)
         if animation is None:
             widget.hide()
@@ -356,11 +363,3 @@ class KireiTooltip(KireiMotionMixin):
         animation.finished.connect(widget.hide)
         return widget
 
-
-def _replace_layout_content(layout: QHBoxLayout | QVBoxLayout, widget: QWidget) -> None:
-    while layout.count() > 0:
-        item = layout.takeAt(0)
-        child = item.widget()
-        if child is not None:
-            child.setParent(None)
-    layout.addWidget(widget)

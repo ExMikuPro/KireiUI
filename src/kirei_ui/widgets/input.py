@@ -5,11 +5,12 @@ from collections.abc import Callable
 from PySide6.QtWidgets import QLineEdit, QTextEdit, QWidget
 from typing_extensions import Self
 
+from kirei_ui.utils import keep_callback
+
 
 class KireiInput(QLineEdit):
     def __init__(self, value: str = "", parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self._kirei_callbacks: list[Callable[..., object]] = []
         self.setProperty("kirei", "input")
         self.setProperty("kireiRole", "input")
         if value:
@@ -39,7 +40,7 @@ class KireiInput(QLineEdit):
         return self
 
     def on_change(self, callback: Callable[[str], object]) -> Self:
-        handler = self._keep_callback(callback)
+        handler = keep_callback(self, callback)
         self.textChanged.connect(handler)
         return self
 
@@ -47,7 +48,7 @@ class KireiInput(QLineEdit):
         def handler() -> object:
             return callback()
 
-        saved = self._keep_callback(handler)
+        saved = keep_callback(self, handler)
         self.returnPressed.connect(saved)
         return self
 
@@ -58,10 +59,6 @@ class KireiInput(QLineEdit):
     def disabled(self, value: bool = True) -> Self:
         self.setDisabled(value)
         return self
-
-    def _keep_callback(self, handler: Callable[..., object]) -> Callable[..., object]:
-        self._kirei_callbacks.append(handler)
-        return handler
 
 
 class KireiPassword(KireiInput):
@@ -79,7 +76,6 @@ class KireiPassword(KireiInput):
 class KireiTextarea(QTextEdit):
     def __init__(self, value: str = "", parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self._kirei_callbacks: list[Callable[..., object]] = []
         self.setProperty("kirei", "textarea")
         self.setProperty("kireiRole", "textarea")
         if value:
@@ -101,7 +97,7 @@ class KireiTextarea(QTextEdit):
         return self
 
     def on_change(self, callback: Callable[[], object]) -> Self:
-        handler = self._keep_callback(callback)
+        handler = keep_callback(self, callback)
         self.textChanged.connect(handler)
         return self
 
@@ -112,7 +108,3 @@ class KireiTextarea(QTextEdit):
     def disabled(self, value: bool = True) -> Self:
         self.setDisabled(value)
         return self
-
-    def _keep_callback(self, handler: Callable[..., object]) -> Callable[..., object]:
-        self._kirei_callbacks.append(handler)
-        return handler

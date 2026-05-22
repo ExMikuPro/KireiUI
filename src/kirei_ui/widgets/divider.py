@@ -3,6 +3,8 @@ from __future__ import annotations
 from PySide6.QtWidgets import QFrame, QWidget
 from typing_extensions import Self
 
+from kirei_ui.utils import refresh_style
+
 
 class KireiDivider(QFrame):
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -26,7 +28,7 @@ class KireiDivider(QFrame):
 
     def variant(self, name: str) -> Self:
         self.setProperty("kireiVariant", name)
-        self._refresh_style()
+        refresh_style(self)
         return self
 
     def spacing(self, value: int) -> Self:
@@ -36,8 +38,3 @@ class KireiDivider(QFrame):
     def object_name(self, name: str) -> Self:
         self.setObjectName(name)
         return self
-
-    def _refresh_style(self) -> None:
-        self.style().unpolish(self)
-        self.style().polish(self)
-        self.update()

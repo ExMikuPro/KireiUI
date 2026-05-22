@@ -63,7 +63,7 @@ class KireiWindow(QMainWindow):
 
     def center(self) -> Self:
         app = QApplication.instance()
-        if app is None:
+        if not isinstance(app, QApplication):
             return self
         screen = app.primaryScreen()
         if screen is None:

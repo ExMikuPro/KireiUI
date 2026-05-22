@@ -6,11 +6,12 @@ from typing import Any
 from PySide6.QtWidgets import QComboBox, QWidget
 from typing_extensions import Self
 
+from kirei_ui.utils import keep_callback
+
 
 class KireiComboBox(QComboBox):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self._kirei_callbacks: list[Callable[..., object]] = []
         self.setProperty("kirei", "combobox")
         self.setProperty("kireiRole", "combobox")
 
@@ -39,7 +40,7 @@ class KireiComboBox(QComboBox):
         return self.currentData()
 
     def on_change(self, callback: Callable[[str], object]) -> Self:
-        handler = self._keep_callback(callback)
+        handler = keep_callback(self, callback)
         self.currentTextChanged.connect(handler)
         return self
 
@@ -50,7 +51,3 @@ class KireiComboBox(QComboBox):
     def disabled(self, value: bool = True) -> Self:
         self.setDisabled(value)
         return self
-
-    def _keep_callback(self, handler: Callable[..., object]) -> Callable[..., object]:
-        self._kirei_callbacks.append(handler)
-        return handler

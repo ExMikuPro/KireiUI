@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
 )
 from typing_extensions import Self
 
-from kirei_ui.utils import keep_callback
+from kirei_ui.utils import clear_layout, keep_callback
 from kirei_ui.widgets.input import KireiInput
 
 
@@ -149,11 +149,7 @@ class KireiFilterBar(QWidget):
         return self
 
     def clear_filters(self) -> Self:
-        while self._filters.count() > 0:
-            item = self._filters.takeAt(0)
-            child = item.widget()
-            if child is not None:
-                child.setParent(None)
+        clear_layout(self._filters)
         return self
 
 

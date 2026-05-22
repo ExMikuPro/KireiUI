@@ -18,7 +18,7 @@ from typing_extensions import Self
 
 from kirei_ui.icons import KireiIcon
 from kirei_ui.motion import KireiAnimator, KireiMotionMixin
-from kirei_ui.utils import keep_callback, refresh_style
+from kirei_ui.utils import keep_callback, refresh_style, replace_layout_content
 
 
 class KireiCard(QFrame):
@@ -52,11 +52,11 @@ class KireiCard(QFrame):
         return self
 
     def content(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._content_host, widget)
+        replace_layout_content(self._content_host, widget)
         return self
 
     def footer(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._footer_host, widget)
+        replace_layout_content(self._footer_host, widget)
         return self
 
     def variant(self, name: str) -> Self:
@@ -100,11 +100,11 @@ class KireiSection(QFrame):
         return self
 
     def content(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._content_host, widget)
+        replace_layout_content(self._content_host, widget)
         return self
 
     def set_actions(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._actions_host, widget)
+        replace_layout_content(self._actions_host, widget)
         return self
 
 
@@ -133,15 +133,15 @@ class KireiTopBar(QFrame):
         return self
 
     def leading(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._leading, widget)
+        replace_layout_content(self._leading, widget)
         return self
 
     def trailing(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._trailing, widget)
+        replace_layout_content(self._trailing, widget)
         return self
 
     def content(self, widget: QWidget) -> Self:
-        _replace_layout_content(self._content, widget)
+        replace_layout_content(self._content, widget)
         return self
 
 
@@ -219,6 +219,7 @@ class KireiSidebar(QFrame, KireiMotionMixin):
         self.setProperty("kireiRole", "sidebar")
         self.setProperty("kireiState", "expanded")
         self._items: dict[str, KireiNavItem] = {}
+        self._on_change_callbacks: list[Callable[[str], object]] = []
         self._layout = QVBoxLayout(self)
         self._expanded_width = 260
         self._collapsed_width = 72
@@ -242,7 +243,7 @@ class KireiSidebar(QFrame, KireiMotionMixin):
 
         def on_click() -> object:
             self.current(item_key)
-            for callback in getattr(self, "_kirei_callbacks", []):
+            for callback in self._on_change_callbacks:
                 callback(item_key)
             return None
 
@@ -261,7 +262,7 @@ class KireiSidebar(QFrame, KireiMotionMixin):
         return self
 
     def on_change(self, callback: Callable[[str], object]) -> Self:
-        keep_callback(self, callback)
+        self._on_change_callbacks.append(callback)
         return self
 
     def collapse(self, animated: bool | None = None) -> Self:
@@ -338,6 +339,7 @@ class KireiBreadcrumbs(QFrame):
         super().__init__(parent)
         self.setProperty("kirei", "breadcrumbs")
         self.setProperty("kireiRole", "breadcrumbs")
+        self._on_click_callbacks: list[Callable[[str], object]] = []
         self._layout = QHBoxLayout(self)
 
     def add_item(self, text: str, key: str | None = None) -> Self:
@@ -347,7 +349,7 @@ class KireiBreadcrumbs(QFrame):
         button.setProperty("kireiRole", "breadcrumbItem")
 
         def handler() -> object:
-            for callback in getattr(self, "_kirei_callbacks", []):
+            for callback in self._on_click_callbacks:
                 callback(item_key)
             return None
 
@@ -360,7 +362,7 @@ class KireiBreadcrumbs(QFrame):
         return self
 
     def on_click(self, callback: Callable[[str], object]) -> Self:
-        keep_callback(self, callback)
+        self._on_click_callbacks.append(callback)
         return self
 
 
@@ -420,12 +422,3 @@ class KireiMenu(QMenu):
     def popup_at(self, widget: QWidget) -> Self:
         self.popup(widget.mapToGlobal(widget.rect().bottomLeft()))
         return self
-
-
-def _replace_layout_content(layout: QHBoxLayout | QVBoxLayout, widget: QWidget) -> None:
-    while layout.count() > 0:
-        item = layout.takeAt(0)
-        child = item.widget()
-        if child is not None:
-            child.setParent(None)
-    layout.addWidget(widget)

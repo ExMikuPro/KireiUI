@@ -6,6 +6,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QWidget
 from typing_extensions import Self
 
+from kirei_ui.utils import refresh_style
+
 
 class KireiLabel(QLabel):
     def __init__(self, text: str = "", parent: QWidget | None = None) -> None:
@@ -43,12 +45,12 @@ class KireiLabel(QLabel):
 
     def variant(self, name: str) -> Self:
         self.setProperty("kireiVariant", name)
-        self._refresh_style()
+        refresh_style(self)
         return self
 
     def role(self, name: str) -> Self:
         self.setProperty("kireiRole", name)
-        self._refresh_style()
+        refresh_style(self)
         return self
 
     def object_name(self, name: str) -> Self:
@@ -58,11 +60,6 @@ class KireiLabel(QLabel):
     def tooltip(self, value: str) -> Self:
         self.setToolTip(value)
         return self
-
-    def _refresh_style(self) -> None:
-        self.style().unpolish(self)
-        self.style().polish(self)
-        self.update()
 
 
 class KireiTitle(KireiLabel):

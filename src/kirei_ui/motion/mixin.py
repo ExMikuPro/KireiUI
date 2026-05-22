@@ -5,15 +5,19 @@ from typing_extensions import Self
 
 
 class KireiMotionMixin:
-    _animated: bool | None = None
-    _animation_duration: int | None = None
+    """Mixin that adds opt-in animation control to a widget.
+
+    State is read lazily via ``getattr(self, "_animated", None)`` so subclasses
+    do not need to call any mixin __init__; setters create the attribute on
+    first use, keeping each instance isolated.
+    """
 
     def animated(self, value: bool = True) -> Self:
-        self._animated = value
+        self._animated: bool | None = value
         return self
 
     def animation_duration(self, duration: int) -> Self:
-        self._animation_duration = max(0, int(duration))
+        self._animation_duration: int | None = max(0, int(duration))
         return self
 
     def should_animate(self, animated: bool | None = None) -> bool:

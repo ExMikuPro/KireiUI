@@ -15,8 +15,9 @@ from PySide6.QtWidgets import (
 )
 from typing_extensions import Self
 
+from kirei_ui.locale import KireiTexts
 from kirei_ui.motion import KireiAnimator, KireiMotionMixin
-from kirei_ui.utils import keep_callback, refresh_style
+from kirei_ui.utils import clear_layout, keep_callback, refresh_style
 
 
 class KireiAlert(QFrame):
@@ -265,8 +266,8 @@ class KireiProgress(QProgressBar, KireiMotionMixin):
 
 
 class KireiSpinner(QLabel):
-    def __init__(self, text: str = "Loading...", parent: QWidget | None = None) -> None:
-        super().__init__(text, parent)
+    def __init__(self, text: str | None = None, parent: QWidget | None = None) -> None:
+        super().__init__(KireiTexts.spinner_default if text is None else text, parent)
         self.setProperty("kirei", "spinner")
         self.setProperty("kireiRole", "spinner")
         self.setProperty("kireiState", "running")
@@ -349,11 +350,7 @@ class KireiEmpty(QWidget):
         return self
 
     def action(self, widget: QWidget) -> Self:
-        while self._action_container.count() > 0:
-            item = self._action_container.takeAt(0)
-            child = item.widget()
-            if child is not None:
-                child.setParent(None)
+        clear_layout(self._action_container)
         self._action_container.addWidget(widget)
         return self
 

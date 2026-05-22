@@ -9,7 +9,6 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
     QLayout,
-    QLayoutItem,
     QScrollArea,
     QSplitter,
     QStackedWidget,
@@ -18,6 +17,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 from typing_extensions import Self
+
+from kirei_ui.utils import clear_layout
 
 
 class KireiHStack(QWidget):
@@ -53,7 +54,7 @@ class KireiHStack(QWidget):
         return self
 
     def clear(self) -> Self:
-        _clear_layout(self._layout)
+        clear_layout(self._layout)
         return self
 
     def qt_layout(self) -> QHBoxLayout:
@@ -93,7 +94,7 @@ class KireiVStack(QWidget):
         return self
 
     def clear(self) -> Self:
-        _clear_layout(self._layout)
+        clear_layout(self._layout)
         return self
 
     def qt_layout(self) -> QVBoxLayout:
@@ -137,7 +138,7 @@ class KireiGrid(QWidget):
         return self
 
     def clear(self) -> Self:
-        _clear_layout(self._layout)
+        clear_layout(self._layout)
         return self
 
     def qt_layout(self) -> QGridLayout:
@@ -166,7 +167,7 @@ class KireiForm(QWidget):
         return self
 
     def clear(self) -> Self:
-        _clear_layout(self._layout)
+        clear_layout(self._layout)
         return self
 
     def qt_layout(self) -> QFormLayout:
@@ -198,7 +199,7 @@ class KireiPanel(QFrame):
         self._content_layout = QVBoxLayout(self)
 
     def content(self, widget: QWidget) -> Self:
-        _clear_layout(self._content_layout)
+        clear_layout(self._content_layout)
         self._content_layout.addWidget(widget)
         return self
 
@@ -212,8 +213,6 @@ class KireiPanel(QFrame):
 
     def variant(self, name: str) -> Self:
         self.setProperty("kireiVariant", name)
-        # Backward compatibility for older QSS selectors.
-        self.setProperty("variant", name)
         return self
 
     def object_name(self, name: str) -> Self:
@@ -284,20 +283,3 @@ class KireiTabs(QTabWidget):
         self.setTabsClosable(value)
         return self
 
-
-def _clear_layout(layout: QLayout) -> None:
-    while layout.count() > 0:
-        item = layout.takeAt(0)
-        _clear_layout_item(item)
-
-
-def _clear_layout_item(item: QLayoutItem | None) -> None:
-    if item is None:
-        return
-    widget = item.widget()
-    if widget is not None:
-        widget.setParent(None)
-        return
-    child_layout = item.layout()
-    if child_layout is not None:
-        _clear_layout(child_layout)

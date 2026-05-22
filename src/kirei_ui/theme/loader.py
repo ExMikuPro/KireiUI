@@ -33,7 +33,7 @@ def apply_base_qss(force: bool = False) -> None:
     The base stylesheet is prepended so user-provided app styles can override it.
     """
     app = QApplication.instance()
-    if app is None:
+    if not isinstance(app, QApplication):
         return
 
     current = app.styleSheet() or ""

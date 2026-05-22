@@ -5,6 +5,8 @@ from typing import Any
 from PySide6.QtCore import QEasingCurve, QPropertyAnimation
 from PySide6.QtWidgets import QGraphicsOpacityEffect, QWidget
 
+from kirei_ui.utils import attached_list
+
 
 class KireiAnimator:
     @staticmethod
@@ -139,11 +141,7 @@ def _set_target(widget: QWidget, property_name: str, value: Any) -> None:
 
 
 def _keep_animation(widget: QWidget, animation: QPropertyAnimation) -> None:
-    animations = getattr(widget, "_kirei_animations", None)
-    if animations is None:
-        animations = []
-        widget._kirei_animations = animations
-    animations.append(animation)
+    attached_list(widget, "_kirei_animations").append(animation)
 
 
 def _remove_animation(widget: QWidget, animation: QPropertyAnimation) -> None:
