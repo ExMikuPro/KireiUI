@@ -39,6 +39,7 @@ class KireiButton(QPushButton):
         self._size: ButtonSize = size
         self._loading = False
         self._normal_text = text
+        self._kirei_callbacks: list[Callable[..., object]] = []
 
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setProperty("kirei", "button")
@@ -133,8 +134,29 @@ class KireiButton(QPushButton):
         self.setDisabled(value)
         return self
 
-    def on_click(self, callback: Callable[[], None]) -> Self:
-        self.clicked.connect(callback)
+    def checkable(self, value: bool = True) -> Self:
+        self.setCheckable(value)
+        return self
+
+    def checked(self, value: bool = True) -> Self:
+        self.setChecked(value)
+        return self
+
+    def on_click(self, callback: Callable[[], object]) -> Self:
+        def handler(checked: bool = False) -> object:
+            _ = checked
+            return callback()
+
+        self._kirei_callbacks.append(handler)
+        self.clicked.connect(handler)
+        return self
+
+    def on_click_checked(self, callback: Callable[[bool], object]) -> Self:
+        def handler(checked: bool = False) -> object:
+            return callback(bool(checked))
+
+        self._kirei_callbacks.append(handler)
+        self.clicked.connect(handler)
         return self
 
     def _refresh_style(self) -> None:

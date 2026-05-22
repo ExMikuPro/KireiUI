@@ -9,7 +9,7 @@ import pytest
 pytest.importorskip("PySide6")
 
 from PySide6.QtCore import QSize
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QApplication, QWidget
 
 from kirei_ui.app.application import KireiApp
 from kirei_ui.app.window import KireiWindow
@@ -62,6 +62,70 @@ def test_window_set_content_old_api_still_works() -> None:
 def test_button_primary_compact_returns_self() -> None:
     button = KireiButton("A")
     assert button.primary().compact() is button
+
+
+def test_button_on_click_returns_self() -> None:
+    button = KireiButton("A")
+
+    def callback() -> None:
+        return None
+
+    assert button.on_click(callback) is button
+
+
+def test_button_on_click_invoked_once_by_click() -> None:
+    QApplication.instance() or QApplication([])
+    button = KireiButton("A")
+    calls = {"count": 0}
+
+    def callback() -> None:
+        calls["count"] += 1
+
+    button.on_click(callback)
+    button.click()
+    assert calls["count"] == 1
+
+
+def test_button_on_click_ignores_checked_argument() -> None:
+    QApplication.instance() or QApplication([])
+    button = KireiButton("A").checkable()
+    calls = {"count": 0}
+
+    def callback() -> None:
+        calls["count"] += 1
+
+    button.on_click(callback)
+    button.click()
+    assert calls["count"] == 1
+
+
+def test_button_checkable_on_click_checked_receives_bool() -> None:
+    QApplication.instance() or QApplication([])
+    values: list[bool] = []
+    button = KireiButton("A").checkable().on_click_checked(lambda checked: values.append(checked))
+
+    button.click()
+    button.click()
+    assert values == [True, False]
+
+
+def test_button_chain_with_callback_stays_chainable() -> None:
+    button = KireiButton("A")
+    chained = button.primary().on_click(lambda: None).compact()
+    assert chained is button
+
+
+def test_qt_native_clicked_connect_still_works() -> None:
+    QApplication.instance() or QApplication([])
+    button = KireiButton("A")
+    calls = {"count": 0}
+
+    def callback() -> None:
+        calls["count"] += 1
+
+    button.clicked.connect(callback)
+    button.click()
+    assert calls["count"] == 1
 
 
 def test_button_text_getter_and_setter_chain() -> None:
