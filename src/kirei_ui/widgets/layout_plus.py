@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -14,6 +15,8 @@ from PySide6.QtWidgets import (
 )
 from typing_extensions import Self
 
+from kirei_ui.icons import KireiIcon
+from kirei_ui.motion import KireiAnimator, KireiMotionMixin
 from kirei_ui.utils import keep_callback, refresh_style
 
 
@@ -167,21 +170,51 @@ class KireiNavItem(QPushButton):
         self.clicked.connect(saved)
         return self
 
+    def icon(
+        self,
+        value: str | QIcon,
+        *,
+        style: str = "regular",
+        size: int = 20,
+        strict: bool = False,
+    ) -> Self:
+        if isinstance(value, QIcon):
+            self.setIcon(value)
+            return self
+        self.setIcon(KireiIcon.qicon(value, style=style, size=size, strict=strict))
+        return self
+
     def get_key(self) -> str:
         return self._key
 
 
-class KireiSidebar(QFrame):
+class KireiSidebar(QFrame, KireiMotionMixin):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setProperty("kirei", "sidebar")
         self.setProperty("kireiRole", "sidebar")
+        self.setProperty("kireiState", "expanded")
         self._items: dict[str, KireiNavItem] = {}
         self._layout = QVBoxLayout(self)
+        self._expanded_width = 260
+        self._collapsed_width = 72
+        self.setMinimumWidth(self._collapsed_width)
+        self.setMaximumWidth(self._expanded_width)
 
-    def add_item(self, text: str, key: str | None = None) -> Self:
+    def add_item(
+        self,
+        text: str,
+        key: str | None = None,
+        *,
+        icon: str | QIcon | None = None,
+        icon_style: str = "regular",
+        icon_size: int = 20,
+        strict_icon: bool = False,
+    ) -> Self:
         item_key = key or text
         item = KireiNavItem(text, item_key)
+        if icon is not None:
+            item.icon(icon, style=icon_style, size=icon_size, strict=strict_icon)
 
         def on_click() -> object:
             self.current(item_key)
@@ -207,6 +240,45 @@ class KireiSidebar(QFrame):
         keep_callback(self, callback)
         return self
 
+    def collapse(self, animated: bool | None = None) -> Self:
+        self.setProperty("kireiState", "collapsed")
+        refresh_style(self)
+        enabled = self.should_animate(animated)
+        duration = self.resolved_animation_duration()
+        KireiAnimator.slide_width(
+            self,
+            self.width() or self._expanded_width,
+            self._collapsed_width,
+            duration=duration,
+            enabled=enabled,
+        )
+        return self
+
+    def expand(self, animated: bool | None = None) -> Self:
+        self.setProperty("kireiState", "expanded")
+        refresh_style(self)
+        enabled = self.should_animate(animated)
+        duration = self.resolved_animation_duration()
+        KireiAnimator.slide_width(
+            self,
+            self.width() or self._collapsed_width,
+            self._expanded_width,
+            duration=duration,
+            enabled=enabled,
+        )
+        return self
+
+    def collapsed(self, value: bool = True) -> Self:
+        if value:
+            return self.collapse()
+        return self.expand()
+
+    def toggle(self, animated: bool | None = None) -> Self:
+        state = self.property("kireiState")
+        if state == "collapsed":
+            return self.expand(animated=animated)
+        return self.collapse(animated=animated)
+
 
 class KireiToolbar(QFrame):
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -217,6 +289,12 @@ class KireiToolbar(QFrame):
 
     def add(self, widget: QWidget) -> Self:
         self._layout.addWidget(widget)
+        return self
+
+    def add_action(self, action: QAction) -> Self:
+        button = QToolButton(self)
+        button.setDefaultAction(action)
+        self._layout.addWidget(button)
         return self
 
     def separator(self) -> Self:
@@ -284,8 +362,29 @@ class KireiMenu(QMenu):
         self.setProperty("kirei", "menu")
         self.setProperty("kireiRole", "menu")
 
-    def add_action(self, text: str, callback: Callable[[], object] | None = None) -> Self:
+    def add_action(
+        self,
+        text: str,
+        callback: Callable[[], object] | None = None,
+        *,
+        icon: str | QIcon | None = None,
+        icon_style: str = "regular",
+        icon_size: int = 20,
+        strict_icon: bool = False,
+    ) -> Self:
         action = self.addAction(text)
+        if icon is not None:
+            if isinstance(icon, QIcon):
+                action.setIcon(icon)
+            else:
+                action.setIcon(
+                    KireiIcon.qicon(
+                        icon,
+                        style=icon_style,
+                        size=icon_size,
+                        strict=strict_icon,
+                    )
+                )
         if callback is not None:
             action.triggered.connect(keep_callback(self, callback))
         return self

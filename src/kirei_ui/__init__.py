@@ -1,4 +1,5 @@
 from kirei_ui.app import KireiApp, KireiWindow
+from kirei_ui.icons import KireiIcon, KireiIconRegistry, icon
 from kirei_ui.stack import (
     KireiForm,
     KireiGrid,
@@ -92,6 +93,8 @@ __all__ = [
     "KireiForm",
     "KireiGrid",
     "KireiHStack",
+    "KireiIcon",
+    "KireiIconRegistry",
     "KireiInput",
     "KireiLabel",
     "KireiList",
@@ -132,4 +135,5 @@ __all__ = [
     "KireiVStack",
     "KireiWindow",
     "__version__",
+    "icon",
 ]

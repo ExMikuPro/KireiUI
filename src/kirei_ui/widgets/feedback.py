@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 )
 from typing_extensions import Self
 
+from kirei_ui.motion import KireiAnimator, KireiMotionMixin
 from kirei_ui.utils import keep_callback, refresh_style
 
 
@@ -178,7 +179,7 @@ class KireiTag(QFrame):
         return self
 
 
-class KireiProgress(QProgressBar):
+class KireiProgress(QProgressBar, KireiMotionMixin):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setProperty("kirei", "progress")
@@ -190,7 +191,28 @@ class KireiProgress(QProgressBar):
         return self
 
     def value(self, value: int) -> Self:
-        self.setValue(value)
+        return self.set_value(value)
+
+    def set_value(self, value: int, animated: bool | None = None) -> Self:
+        if self.minimum() == 0 and self.maximum() == 0:
+            self.setValue(value)
+            return self
+        if not self.isVisible():
+            self.setValue(value)
+            return self
+        enabled = self.should_animate(animated)
+        duration = self.resolved_animation_duration()
+        current = int(super().value())
+        if current < self.minimum():
+            current = self.minimum()
+        KireiAnimator.animate_property(
+            self,
+            "value",
+            current,
+            value,
+            duration=duration,
+            enabled=enabled,
+        )
         return self
 
     def get_value(self) -> int:

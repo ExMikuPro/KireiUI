@@ -208,14 +208,36 @@ def test_app_set_theme_returns_self() -> None:
         def set_theme(
             self,
             theme: str | None = "base",
+            qss_dirs: list[str | Path] | None = None,
             qss_files: list[str | Path] | None = None,
+            recursive: bool = False,
             extra_qss: str | None = None,
         ) -> _FakeApp:
-            return KireiApp.set_theme(self, theme=theme, qss_files=qss_files, extra_qss=extra_qss)
+            return KireiApp.set_theme(
+                self,
+                theme=theme,
+                qss_dirs=qss_dirs,
+                qss_files=qss_files,
+                recursive=recursive,
+                extra_qss=extra_qss,
+            )
 
     app = _FakeApp()
     assert KireiApp.set_theme(app, theme="base") is app
     assert KireiApp.theme(app, "base") is app
+
+
+def test_app_set_motion_enabled_returns_self() -> None:
+    class _FakeApp:
+        def __init__(self) -> None:
+            self.enable_motion = True
+            self.motion_duration = 180
+
+    app = _FakeApp()
+    assert KireiApp.set_motion_enabled(app, False) is app
+    assert app.enable_motion is False
+    assert KireiApp.set_motion_duration(app, 260) is app
+    assert app.motion_duration == 260
 
 
 def test_label_text_returns_self() -> None:
@@ -320,7 +342,7 @@ def test_tag_danger_variant() -> None:
 
 def test_progress_value_get_value() -> None:
     control = KireiProgress()
-    assert control.value(50).get_value() == 50
+    assert control.set_value(50, animated=False).get_value() == 50
 
 
 def test_empty_title_returns_self() -> None:
@@ -366,6 +388,9 @@ def test_topbar_sidebar_toolbar_chainable() -> None:
         sidebar.add_item("A", "a").add_widget(QWidget()).current("a").on_change(lambda _k: None)
         is sidebar
     )
+    assert sidebar.animated(False).animation_duration(90) is sidebar
+    assert sidebar.collapse(animated=True).expand(animated=False).toggle(animated=True) is sidebar
+    assert sidebar.collapsed() is sidebar
     assert toolbar.add(QWidget()).separator().stretch() is toolbar
 
 
@@ -389,7 +414,16 @@ def test_overlay_components_chainable_and_variants() -> None:
     drawer = KireiDrawer()
     pop = KireiPopover()
     w = QWidget()
-    result = dialog.title("A").content(QWidget()).footer(QWidget()).modal().open().close_dialog()
+    result = (
+        dialog.title("A")
+        .content(QWidget())
+        .footer(QWidget())
+        .modal()
+        .animated(False)
+        .animation_duration(120)
+        .show_animated(animated=True)
+        .close_animated(animated=False)
+    )
     assert result is dialog
     assert (
         confirm.title("A")
@@ -402,9 +436,12 @@ def test_overlay_components_chainable_and_variants() -> None:
         is confirm
     )
     assert msg.title("A").text("B").warning().danger().info().open() is msg
-    assert drawer.title("A").content(QWidget()).side("left").open().close_drawer() is drawer
-    assert pop.content(QWidget()) is pop
+    assert drawer.title("A").content(QWidget()).side("left").open().close(animated=False) is drawer
+    assert drawer.toggle(animated=True) is drawer
+    assert pop.content(QWidget()).show_animated(animated=True).close_animated(animated=False) is pop
     assert KireiTooltip.apply(w, "tip") is w
+    assert KireiTooltip.show_animated(w, "tip", animated=False) is w
+    assert KireiTooltip.close_animated(w, animated=False) is w
 
 
 def test_table_and_list_and_tree_chainable() -> None:

@@ -1,4 +1,12 @@
-from kirei_ui.stack import KireiForm, KireiGrid, KireiHStack, KireiSplitter, KireiStack, KireiVStack
+from kirei_ui.stack import (
+    KireiForm,
+    KireiGrid,
+    KireiHStack,
+    KireiPanel,
+    KireiSplitter,
+    KireiStack,
+    KireiVStack,
+)
 from kirei_ui.widgets.layout_plus import KireiActionGroup, KireiCard, KireiSection, KireiToolbar
 
 __all__ = [
@@ -7,6 +15,7 @@ __all__ = [
     "KireiForm",
     "KireiGrid",
     "KireiHStack",
+    "KireiPanel",
     "KireiSection",
     "KireiSplitter",
     "KireiStack",

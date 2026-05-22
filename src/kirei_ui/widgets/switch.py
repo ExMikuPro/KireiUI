@@ -5,10 +5,11 @@ from collections.abc import Callable
 from PySide6.QtWidgets import QCheckBox, QWidget
 from typing_extensions import Self
 
+from kirei_ui.motion import KireiMotionMixin
 from kirei_ui.utils import keep_callback, refresh_style
 
 
-class KireiSwitch(QCheckBox):
+class KireiSwitch(QCheckBox, KireiMotionMixin):
     def __init__(self, text: str = "", parent: QWidget | None = None) -> None:
         super().__init__(text, parent)
         self.setProperty("kirei", "switch")

@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 )
 from typing_extensions import Self
 
+from kirei_ui.icons import KireiIcon
 from kirei_ui.utils import keep_callback
 
 
@@ -23,6 +24,20 @@ class KireiAction:
 
     def text(self, value: str) -> Self:
         self._action.setText(value)
+        return self
+
+    def icon(
+        self,
+        value: str | QIcon,
+        *,
+        style: str = "regular",
+        size: int = 20,
+        strict: bool = False,
+    ) -> Self:
+        if isinstance(value, QIcon):
+            self._action.setIcon(value)
+            return self
+        self._action.setIcon(KireiIcon.qicon(value, style=style, size=size, strict=strict))
         return self
 
     def shortcut(self, value: str) -> Self:

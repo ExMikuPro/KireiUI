@@ -21,35 +21,65 @@ class KireiApp(QApplication):
         argv: list[str] | Sequence[str] | None = None,
         *,
         theme: str | None = "base",
+        qss_dirs: list[str | Path] | None = None,
         qss_files: list[str | Path] | None = None,
+        recursive: bool = False,
         extra_qss: str | None = None,
+        enable_motion: bool = True,
+        motion_duration: int = 180,
         application_name: str = "KireiUI App",
         organization_name: str = "KireiUI",
     ) -> None:
         super().__init__(list(argv) if argv is not None else sys.argv)
+        self.enable_motion = enable_motion
+        self.motion_duration = motion_duration
 
         self.setApplicationName(application_name)
         self.setOrganizationName(organization_name)
 
-        self.set_theme(theme=theme, qss_files=qss_files, extra_qss=extra_qss)
+        self.set_theme(
+            theme=theme,
+            qss_dirs=qss_dirs,
+            qss_files=qss_files,
+            recursive=recursive,
+            extra_qss=extra_qss,
+        )
 
     def set_theme(
         self,
         theme: str | None = "base",
+        qss_dirs: list[str | Path] | None = None,
         qss_files: list[str | Path] | None = None,
+        recursive: bool = False,
         extra_qss: str | None = None,
     ) -> Self:
         """Rebuild and apply the application stylesheet."""
-        self.setStyleSheet(build_qss(theme=theme, qss_files=qss_files, extra_qss=extra_qss))
+        self.setStyleSheet(
+            build_qss(
+                theme=theme,
+                qss_dirs=qss_dirs,
+                qss_files=qss_files,
+                recursive=recursive,
+                extra_qss=extra_qss,
+            )
+        )
         return self
 
     def theme(
         self,
         theme: str | None = "base",
+        qss_dirs: list[str | Path] | None = None,
         qss_files: list[str | Path] | None = None,
+        recursive: bool = False,
         extra_qss: str | None = None,
     ) -> Self:
-        return self.set_theme(theme=theme, qss_files=qss_files, extra_qss=extra_qss)
+        return self.set_theme(
+            theme=theme,
+            qss_dirs=qss_dirs,
+            qss_files=qss_files,
+            recursive=recursive,
+            extra_qss=extra_qss,
+        )
 
     def load_qss(self, path: str | Path, append: bool = True) -> Self:
         """Load user QSS from file path.
@@ -70,6 +100,14 @@ class KireiApp(QApplication):
             return self
 
         self.setStyleSheet(qss)
+        return self
+
+    def set_motion_enabled(self, value: bool = True) -> Self:
+        self.enable_motion = value
+        return self
+
+    def set_motion_duration(self, value: int = 180) -> Self:
+        self.motion_duration = max(0, int(value))
         return self
 
     def run(self) -> int:

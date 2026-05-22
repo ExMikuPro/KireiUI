@@ -60,13 +60,17 @@ requires = ["setuptools>=68.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 include = ["kirei_ui*"]
 
 [tool.setuptools.package-data]
 kirei_ui = [
     "resources/qss/*.qss",
     "resources/icons/*.svg",
+    "resources/icons/fluent/**/*.svg",
+    "resources/icons/fluent/manifest.json",
+    "resources/icons/fluent/LICENSE",
+    "resources/icons/fluent/NOTICE",
 ]
 
 ignore = []

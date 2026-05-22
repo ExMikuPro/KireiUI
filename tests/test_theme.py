@@ -143,3 +143,58 @@ def test_build_qss_theme_none_still_builds_user_styles() -> None:
 def test_load_builtin_qss_base_returns_qss() -> None:
     result = load_builtin_qss("base")
     assert "QPushButton[kirei=\"button\"]" in result
+
+
+def test_build_qss_loads_qss_dirs_before_qss_files_and_sorted() -> None:
+    with TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        qss_dir = root / "styles"
+        qss_dir.mkdir()
+        (qss_dir / "02_layout.qss").write_text("QWidget { padding: 1px; }", encoding="utf-8")
+        (qss_dir / "01_base.qss").write_text("QWidget { margin: 1px; }", encoding="utf-8")
+        file_qss = root / "app.qss"
+        file_qss.write_text("QWidget { color: #111; }", encoding="utf-8")
+
+        result = build_qss(theme=None, qss_dirs=[qss_dir], qss_files=[file_qss])
+
+    idx_base = result.find("margin: 1px")
+    idx_layout = result.find("padding: 1px")
+    idx_file = result.find("color: #111")
+    assert idx_base != -1
+    assert idx_layout != -1
+    assert idx_file != -1
+    assert idx_base < idx_layout < idx_file
+
+
+def test_build_qss_qss_dirs_recursive() -> None:
+    with TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        qss_dir = root / "styles"
+        nested = qss_dir / "nested"
+        nested.mkdir(parents=True)
+        (nested / "01_nested.qss").write_text("QLabel { font-size: 12px; }", encoding="utf-8")
+
+        no_recursive = build_qss(theme=None, qss_dirs=[qss_dir], recursive=False)
+        recursive = build_qss(theme=None, qss_dirs=[qss_dir], recursive=True)
+
+    assert "font-size: 12px" not in no_recursive
+    assert "font-size: 12px" in recursive
+
+
+def test_build_qss_raises_for_invalid_dirs_and_files() -> None:
+    with TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        missing_dir = root / "missing"
+        not_dir = root / "not_dir.qss"
+        not_dir.write_text("QLabel{}", encoding="utf-8")
+        real_dir = root / "styles"
+        real_dir.mkdir()
+
+        with pytest.raises(FileNotFoundError):
+            build_qss(theme=None, qss_dirs=[missing_dir])
+
+        with pytest.raises(NotADirectoryError):
+            build_qss(theme=None, qss_dirs=[not_dir])
+
+        with pytest.raises(IsADirectoryError):
+            build_qss(theme=None, qss_files=[real_dir])

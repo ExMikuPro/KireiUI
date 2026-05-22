@@ -4,8 +4,11 @@ from collections.abc import Callable
 from typing import Literal, overload
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QPushButton, QWidget
 from typing_extensions import Self
+
+from kirei_ui.icons import KireiIcon
 
 ButtonVariant = Literal[
     "default",
@@ -29,8 +32,12 @@ class KireiButton(QPushButton):
         self,
         text: str = "",
         *,
+        icon: str | QIcon | None = None,
         variant: ButtonVariant = "default",
         size: ButtonSize = "medium",
+        icon_style: str = "regular",
+        icon_size: int = 20,
+        strict_icon: bool = False,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(text, parent)
@@ -47,6 +54,8 @@ class KireiButton(QPushButton):
 
         self.set_variant(variant)
         self.set_size(size)
+        if icon is not None:
+            self.icon(icon, style=icon_style, size=icon_size, strict=strict_icon)
 
     def set_variant(self, variant: ButtonVariant) -> None:
         self._variant = variant
@@ -158,6 +167,20 @@ class KireiButton(QPushButton):
 
         self._kirei_callbacks.append(handler)
         self.clicked.connect(handler)
+        return self
+
+    def icon(
+        self,
+        value: str | QIcon,
+        *,
+        style: str = "regular",
+        size: int = 20,
+        strict: bool = False,
+    ) -> Self:
+        if isinstance(value, QIcon):
+            self.setIcon(value)
+            return self
+        self.setIcon(KireiIcon.qicon(value, style=style, size=size, strict=strict))
         return self
 
     def _refresh_style(self) -> None:

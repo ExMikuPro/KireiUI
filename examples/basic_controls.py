@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from kirei_ui import KireiDivider, KireiText, KireiTitle
 from kirei_ui.app import KireiApp, KireiWindow
 from kirei_ui.inputs import (
@@ -12,8 +14,24 @@ from kirei_ui.inputs import (
 from kirei_ui.layout import KireiForm, KireiHStack, KireiVStack
 
 
+def _resolve_theme_dirs() -> list[Path]:
+    root = Path(__file__).resolve().parents[1]
+    candidates = [
+        root / "styles" / "silicon_light",
+        root / "styles" / "aui_light",
+        root / "styles" / "eui_light",
+    ]
+    for path in candidates:
+        if path.is_dir():
+            return [path]
+    return []
+
+
 def main() -> int:
-    app = KireiApp()
+    theme_dirs = _resolve_theme_dirs()
+    app = KireiApp(
+        qss_dirs=theme_dirs or None,
+    )
 
     username = KireiInput().placeholder("Enter username").clearable()
     password = KireiPassword().placeholder("Enter password")

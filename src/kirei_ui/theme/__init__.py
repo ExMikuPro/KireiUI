@@ -22,12 +22,28 @@ def load_builtin_qss(theme: str = "base") -> str:
 
 
 def load_qss_file(path: str | Path) -> str:
-    return Path(path).expanduser().read_text(encoding="utf-8")
+    qss_path = Path(path).expanduser()
+    if qss_path.is_dir():
+        raise IsADirectoryError(qss_path)
+    return qss_path.read_text(encoding="utf-8")
+
+
+def load_qss_dir(path: str | Path, recursive: bool = False) -> list[Path]:
+    dir_path = Path(path).expanduser()
+    if not dir_path.exists():
+        raise FileNotFoundError(dir_path)
+    if not dir_path.is_dir():
+        raise NotADirectoryError(dir_path)
+
+    pattern = "**/*.qss" if recursive else "*.qss"
+    return sorted(p for p in dir_path.glob(pattern) if p.is_file())
 
 
 def build_qss(
     theme: str | None = "base",
+    qss_dirs: list[str | Path] | None = None,
     qss_files: list[str | Path] | None = None,
+    recursive: bool = False,
     extra_qss: str | None = None,
 ) -> str:
     chunks: list[str] = []
@@ -36,6 +52,12 @@ def build_qss(
         builtin = load_builtin_qss(theme).strip()
         if builtin:
             chunks.append(builtin)
+
+    for qss_dir in qss_dirs or []:
+        for qss_file in load_qss_dir(qss_dir, recursive=recursive):
+            dir_qss = load_qss_file(qss_file).strip()
+            if dir_qss:
+                chunks.append(dir_qss)
 
     for qss_file in qss_files or []:
         user_qss = load_qss_file(qss_file).strip()
@@ -64,20 +86,38 @@ class KireiStyle:
     def from_sources(
         cls,
         theme: str | None = "base",
+        qss_dirs: list[str | Path] | None = None,
         qss_files: list[str | Path] | None = None,
+        recursive: bool = False,
         extra_qss: str | None = None,
     ) -> KireiStyle:
-        return cls(build_qss(theme=theme, qss_files=qss_files, extra_qss=extra_qss))
+        return cls(
+            build_qss(
+                theme=theme,
+                qss_dirs=qss_dirs,
+                qss_files=qss_files,
+                recursive=recursive,
+                extra_qss=extra_qss,
+            )
+        )
 
 
 class KireiTheme:
     @staticmethod
     def build(
         theme: str | None = "base",
+        qss_dirs: list[str | Path] | None = None,
         qss_files: list[str | Path] | None = None,
+        recursive: bool = False,
         extra_qss: str | None = None,
     ) -> str:
-        return build_qss(theme=theme, qss_files=qss_files, extra_qss=extra_qss)
+        return build_qss(
+            theme=theme,
+            qss_dirs=qss_dirs,
+            qss_files=qss_files,
+            recursive=recursive,
+            extra_qss=extra_qss,
+        )
 
 
 __all__ = [
@@ -90,5 +130,6 @@ __all__ = [
     "build_qss",
     "load_base_qss",
     "load_builtin_qss",
+    "load_qss_dir",
     "load_qss_file",
 ]
