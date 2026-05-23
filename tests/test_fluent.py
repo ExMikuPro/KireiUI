@@ -212,6 +212,7 @@ def test_app_set_theme_returns_self() -> None:
             qss_files: list[str | Path] | None = None,
             recursive: bool = False,
             extra_qss: str | None = None,
+            tokens: object = None,
         ) -> _FakeApp:
             return KireiApp.set_theme(
                 self,
@@ -220,6 +221,7 @@ def test_app_set_theme_returns_self() -> None:
                 qss_files=qss_files,
                 recursive=recursive,
                 extra_qss=extra_qss,
+                tokens=tokens,
             )
 
     app = _FakeApp()
