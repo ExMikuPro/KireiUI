@@ -1,0 +1,91 @@
+[color]
+# Text — slate scale, 800 主文字 + 500 muted + 400 subtle，对比度足够但不刺眼
+text             = "#1E293B"
+text_muted       = "#64748B"
+text_subtle      = "#94A3B8"
+text_on_brand    = "#FFFFFF"
+text_link        = "#2563EB"
+text_link_active = "#1D4ED8"
+
+# Background — 真中性灰，不再带蓝色调
+bg_app           = "#F8FAFC"
+bg_surface       = "#FFFFFF"
+bg_surface_hover = "#F8FAFC"
+bg_subtle        = "#F1F5F9"
+bg_muted         = "#F1F5F9"
+button_hover_tint = "#E4E6EB"
+bg_hover         = "#F1F5F9"
+bg_pressed       = "#E2E8F0"
+bg_disabled      = "#F1F5F9"
+bg_selected      = "#DBEAFE"
+bg_selected_soft = "#EFF6FF"
+bg_status_strip  = "#F1F5F9"
+bg_menubar       = "#FFFFFF"
+bg_sidebar       = "#F8FAFC"
+bg_topbar        = "#FFFFFF"
+
+# Border — slate-200 / slate-300
+border           = "#E2E8F0"
+border_subtle    = "#F1F5F9"
+border_strong    = "#CBD5E1"
+border_disabled  = "#E2E8F0"
+border_selected  = "#BFDBFE"
+border_focus_alt = "#93C5FD"
+
+# Primary — Tailwind blue-600，标准、可信、不躁
+primary            = "#2563EB"
+primary_hover      = "#3B82F6"
+primary_pressed    = "#1D4ED8"
+primary_grad_start = "#3B82F6"
+primary_border     = "#2563EB"
+
+# Danger — red-600
+danger             = "#DC2626"
+danger_hover       = "#EF4444"
+danger_pressed     = "#B91C1C"
+danger_grad_start  = "#EF4444"
+danger_border      = "#DC2626"
+
+# Warning — amber-600（比纯黄更易读）
+warning            = "#D97706"
+warning_hover      = "#F59E0B"
+warning_pressed    = "#B45309"
+warning_grad_start = "#F59E0B"
+warning_border     = "#D97706"
+
+# Success — green-600
+success            = "#16A34A"
+success_hover      = "#22C55E"
+success_pressed    = "#15803D"
+
+focus_ring        = "#3B82F6"
+selection_text_bg = "#BFDBFE"
+
+# Soft semantic — alert/badge/tag 用的浅色背景
+soft_info_bg        = "#EFF6FF"
+soft_info_border    = "#BFDBFE"
+soft_success_bg     = "#F0FDF4"
+soft_success_border = "#BBF7D0"
+soft_success_text   = "#15803D"
+soft_warning_bg     = "#FFFBEB"
+soft_warning_border = "#FDE68A"
+soft_warning_text   = "#B45309"
+soft_danger_bg      = "#FEF2F2"
+soft_danger_border  = "#FECACA"
+soft_danger_text    = "#B91C1C"
+soft_neutral_bg     = "#F1F5F9"
+soft_neutral_text   = "#475569"
+
+input_error_bg   = "#FEF2F2"
+input_warning_bg = "#FFFBEB"
+input_success_bg = "#F0FDF4"
+
+scrollbar_thumb       = "#CBD5E1"
+scrollbar_thumb_hover = "#94A3B8"
+
+splitter_handle       = "#E2E8F0"
+splitter_handle_hover = "#94A3B8"
+
+tooltip_bg     = "rgba(15, 23, 42, 230)"
+tooltip_text   = "#FFFFFF"
+tooltip_border = "rgba(255, 255, 255, 30)"

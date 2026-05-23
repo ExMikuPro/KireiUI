@@ -1,0 +1,95 @@
+[color]
+# Text
+text = "#F8FAFC"
+text_muted = "#CBD5E1"
+text_subtle = "#94A3B8"
+text_on_brand = "#FFFFFF"
+text_link = "#60A5FA"
+text_link_active = "#93C5FD"
+
+# Background
+bg_app = "#0B1120"
+bg_surface = "#111827"
+bg_surface_hover = "#1F2937"
+bg_subtle = "#172033"
+bg_muted = "#1E293B"
+bg_hover = "#1F2937"
+bg_pressed = "#273449"
+bg_disabled = "#141B2A"
+bg_selected = "#1D4ED8"
+bg_selected_soft = "#172554"
+bg_status_strip = "#0F172A"
+bg_menubar = "#0B1120"
+bg_sidebar = "#0F172A"
+bg_topbar = "#0F172A"
+
+# Border
+border = "#334155"
+border_subtle = "#1E293B"
+border_strong = "#475569"
+border_disabled = "#263244"
+border_selected = "#3B82F6"
+border_focus_alt = "#60A5FA"
+
+# Primary
+primary = "#3B82F6"
+primary_hover = "#60A5FA"
+primary_pressed = "#2563EB"
+primary_grad_start = "#93C5FD"
+primary_border = "#60A5FA"
+
+# Danger
+danger = "#EF4444"
+danger_hover = "#F87171"
+danger_pressed = "#DC2626"
+danger_grad_start = "#FCA5A5"
+danger_border = "#F87171"
+
+# Warning
+warning = "#F59E0B"
+warning_hover = "#FBBF24"
+warning_pressed = "#D97706"
+warning_grad_start = "#FCD34D"
+warning_border = "#FBBF24"
+
+# Success
+success = "#22C55E"
+success_hover = "#4ADE80"
+success_pressed = "#16A34A"
+
+# Focus / Selection
+focus_ring = "#60A5FA"
+selection_text_bg = "#1E40AF"
+
+# Soft semantic
+soft_info_bg = "#102A4C"
+soft_info_border = "#1D4ED8"
+soft_success_bg = "#0F2A1A"
+soft_success_border = "#166534"
+soft_success_text = "#86EFAC"
+soft_warning_bg = "#2A1B07"
+soft_warning_border = "#92400E"
+soft_warning_text = "#FCD34D"
+soft_danger_bg = "#2A1010"
+soft_danger_border = "#991B1B"
+soft_danger_text = "#FCA5A5"
+soft_neutral_bg = "#1E293B"
+soft_neutral_text = "#CBD5E1"
+
+# Input state background
+input_error_bg = "#1F1112"
+input_warning_bg = "#1F1809"
+input_success_bg = "#0A1F12"
+
+# Scrollbar
+scrollbar_thumb = "#475569"
+scrollbar_thumb_hover = "#64748B"
+
+# Splitter
+splitter_handle = "#334155"
+splitter_handle_hover = "#475569"
+
+# Tooltip
+tooltip_bg = "rgba(15, 23, 42, 245)"
+tooltip_text = "#F8FAFC"
+tooltip_border = "rgba(255, 255, 255, 32)"
