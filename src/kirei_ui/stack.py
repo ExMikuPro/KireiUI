@@ -152,7 +152,7 @@ class KireiGrid(QWidget):
         row_span: int = 1,
         column_span: int = 1,
     ) -> Self:
-        """Place ``widget`` at ``(row, column)`` spanning ``row_span × column_span`` cells."""
+        """Place ``widget`` at ``(row, column)`` spanning ``row_span x column_span`` cells."""
         self._layout.addWidget(widget, row, column, row_span, column_span)
         return self
 

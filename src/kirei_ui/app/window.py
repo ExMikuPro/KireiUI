@@ -12,7 +12,7 @@ class KireiWindow(QMainWindow):
 
     Wraps :class:`QMainWindow` with a chainable API for the common
     setup steps: title, size, central content, and screen centering.
-    The default size (1180×760) and title (``"KireiUI"``) match the
+    The default size (1180x760) and title (``"KireiUI"``) match the
     examples in the docs.
     """
 

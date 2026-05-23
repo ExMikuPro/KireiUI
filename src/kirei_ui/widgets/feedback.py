@@ -246,7 +246,7 @@ class KireiProgress(QProgressBar, KireiMotionMixin):
     in indeterminate mode (``range(0, 0)``), or animations are
     explicitly disabled.
 
-    :meth:`indeterminate` flips between determinate (range 0–100) and
+    :meth:`indeterminate` flips between determinate (range 0-100) and
     indeterminate modes; ``kireiState`` mirrors the mode for QSS.
     """
 
