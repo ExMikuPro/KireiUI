@@ -1,4 +1,4 @@
-from kirei_ui.widgets.button import KireiButton
+from kirei_ui.widgets.button import KireiButton, KireiIconButton
 from kirei_ui.widgets.choice import KireiCheckbox, KireiRadio
 from kirei_ui.widgets.data_display import (
     KireiFilterBar,
@@ -73,6 +73,7 @@ __all__ = [
     "KireiEmpty",
     "KireiFileDialog",
     "KireiFilterBar",
+    "KireiIconButton",
     "KireiInput",
     "KireiLabel",
     "KireiList",

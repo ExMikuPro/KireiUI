@@ -1,4 +1,4 @@
-from kirei_ui.widgets.button import KireiButton
+from kirei_ui.widgets.button import KireiButton, KireiIconButton
 from kirei_ui.widgets.choice import KireiCheckbox, KireiRadio
 from kirei_ui.widgets.data_display import KireiSearchBox
 from kirei_ui.widgets.datetime import KireiDateEdit, KireiDateTimeEdit, KireiTimeEdit
@@ -14,6 +14,7 @@ __all__ = [
     "KireiDateEdit",
     "KireiDateTimeEdit",
     "KireiDoubleSpinBox",
+    "KireiIconButton",
     "KireiInput",
     "KireiPassword",
     "KireiRadio",
